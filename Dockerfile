@@ -11,7 +11,7 @@ ENV JDBC_DATABASE_USERNAME ${JDBC_DATABASE_USERNAME}
 
 WORKDIR /app
 RUN ls -al
-COPY ./epicarcade_auth-0.0.1-SNAPSHOT.jar /app
+COPY ./epicarcade_functional-0.0.1-SNAPSHOT.jar /app
 # klogasalah ngikutin aja sesuai kebutuhan huhu
 EXPOSE 8080
-CMD ["java","-jar","epicarcade_auth-0.0.1-SNAPSHOT.jar"]
+CMD ["java","-jar","epicarcade_functional-0.0.1-SNAPSHOT.jar"]
