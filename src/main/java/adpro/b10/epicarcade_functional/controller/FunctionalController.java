@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 public class FunctionalController {
     @GetMapping("/hello")
     public String helloWorld() {
-        return "HelloWorld";
+        return "HelloWorld2";
     }
 }
 
