@@ -110,6 +110,8 @@ jobs:
 
       - name: update permission
         run: chmod 400 ssh-key.pem
+      - name: check permissions
+        run: ls -la
       - name: Deploy to GCP
         run: |
           ssh -o StrictHostKeyChecking=no -i ssh-key.pem ${{ secrets.GCP_USERNAME }}@${{ secrets.GCP_STATIC_IP }} "
