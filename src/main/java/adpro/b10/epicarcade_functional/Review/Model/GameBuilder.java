@@ -3,11 +3,9 @@ package adpro.b10.epicarcade_functional.Review.Model;
 import java.util.UUID;
 
 public class GameBuilder {
-
     private String id;
     private String name;
     private String description;
-
     private int price;
 
     public GameBuilder id(String id) {
@@ -42,3 +40,7 @@ public class GameBuilder {
         return game;
     }
 }
+
+//class Solution{
+//    public
+//}

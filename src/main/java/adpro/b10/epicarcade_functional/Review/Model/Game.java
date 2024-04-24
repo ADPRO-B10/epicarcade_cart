@@ -43,7 +43,8 @@ public class Game {
     }
 
     public String setId(String id){
-        return id;
+        return
+                this.id = id;
     }
 
     public void setDescription(String description) {
@@ -56,7 +57,7 @@ public class Game {
         if(name == null){
             throw new IllegalArgumentException("Game name cannot be empty");
         }
-        this.description = description;
+        this.name = name;
     }
 
     public void setPrice(int price) {
