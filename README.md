@@ -8,6 +8,17 @@
 ## 2. Pembelian dan Penjualan Produk Game (🙋, 🧑)
 ## 3. Riwayat Transaksi (🙋, 🧑‍)
 ## 4. Pengelolaan Keranjang Belanja (🙋) - Soros Febriano (2206083445)
-  ### Design Pattern - 
+  ### Design Pattern - Command Pattern
+Command Pattern adalah pola desain perilaku yang mengubah request menjadi objek yang berdiri sendiri yang berisi semua informasi tentang permintaan tersebut.
+Design pattern ini cocok untuk fitur yang memiliki berbagai tombol dalam berbagai halaman seperti keranjang belanja yang memungkinkan pengguna untuk 
+`menambahkan`, `menghapus`, atau `men-checkout` item dari keranjang belanja.
+  
+  ### Implementasi Command Pattern
+  - `Command` : Interface yang mendefinisikan metode `execute` dan `undo`
+  - `AddToCartCommand` : Implementasi dari `Command` yang menambahkan item ke keranjang belanja
+  - `RemoveFromCartCommand` : Implementasi dari `Command` yang menghapus item dari keranjang belanja
+  - `Invoker` : Menyimpan daftar perintah dan memanggil metode `execute` atau `undo`
+  - `Receiver` : Menerima perintah dan melakukan aksi yang sesuai
+
 ## 5. Rating dan Ulasan Produk (🙋, 🧑‍) 
 
