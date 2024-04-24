@@ -12,6 +12,7 @@ public class Cart {
     private Integer cartId;
     @OneToOne
     private Product product;
+    @OneToOne
     private UserEntity user;
 
     public Integer getCartId() {
