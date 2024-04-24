@@ -1,5 +1,7 @@
 package adpro.b10.epicarcade_functional.model;
 
+import adpro.b10.epicarcade_functional.enums.TransactionStatus;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Builder;
@@ -23,9 +25,9 @@ public class Transaction {
         this.id = id;
         this.pembeli = pembeli;
         this.penjual = penjual;
-        this.statusPembayaran = "WAITING_PAYMENT";
         this.waktuTransaksi = waktuTransaksi;
         this.totalHarga = totalHarga;
+        this.statusPembayaran = TransactionStatus.WAITING_PAYMENT.getValue();
 
         if (listGame.isEmpty()) {
             throw new IllegalArgumentException();
@@ -34,24 +36,19 @@ public class Transaction {
         }
     }
 
-    public Transaction(String id, String pembeli, String penjual, List<Game> listGame, LocalDate waktuTransaksi, Long totalHarga) {
+    public Transaction(String id, String pembeli, String penjual, List<Game> listGame, LocalDate waktuTransaksi,
+                       Long totalHarga, String statusPembayaran) {
         this(id, pembeli, penjual,  listGame, waktuTransaksi, totalHarga);
 
-        String[] statusList = {"WAITING_PAYMENT", "FAILED", "SUCCESS", "CANCELED"};
-        if (Arrays.stream(statusList).noneMatch(item -> item.equals(statusPembayaran))) {
-            throw new IllegalArgumentException();
-        } else {
-            this.statusPembayaran = statusPembayaran;
-        }
+        this.setStatus(statusPembayaran);
     }
 
 
     public void setStatus(String statusPembayaran) {
-        String[] statusList = {"WAITING_PAYMENT", "FAILED", "SUCCESS", "CANCELLED"};
-        if (Arrays.stream(statusList).noneMatch(item -> item.equals(statusPembayaran))) {
-            throw new IllegalArgumentException();
-        } else {
+        if (TransactionStatus.contains(statusPembayaran)) {
             this.statusPembayaran = statusPembayaran;
+        } else {
+            throw new IllegalArgumentException();
         }
     }
     public void tambahProduk(Game game) {
