@@ -7,7 +7,7 @@ public class CartTest {
 
     @Test
     public void testAddItem() {
-        Cart shoppingCart = new ShoppingCart();
+        Cart shoppingCart = new Cart();
         shoppingCart.addProduct(id123, 5);
         shoppingCart.addProduct(id234, 50);
         shoppingCart.addProduct(id345, 1);
