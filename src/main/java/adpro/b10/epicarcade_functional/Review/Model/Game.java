@@ -23,6 +23,16 @@ public class Game {
     @Column(name = "price", nullable = false)
     private int price;
 
+    @Column(name = "stock", nullable = false)
+    private int stock;
+
+//    @Column(name = "penjual", nullable = false)
+//    private User penjual; ini belum diimplement
+
+
+
+
+
     public Game(){
     }
 
@@ -41,6 +51,8 @@ public class Game {
     public int getPrice() {
         return price;
     }
+
+    public int getStock(){return stock;}
 
     public String setId(String id){
         return
@@ -65,5 +77,12 @@ public class Game {
             throw new IllegalArgumentException("Game price cannot be free");
         }
         this.price = price;
+    }
+
+    public void setStock(int stock) {
+        if(stock == 0){
+            throw new IllegalArgumentException("Game price cannot be free");
+        }
+        this.stock = stock;
     }
 }
