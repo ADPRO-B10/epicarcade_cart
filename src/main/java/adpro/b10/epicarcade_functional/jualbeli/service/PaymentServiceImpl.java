@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -30,7 +31,8 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public Payment addPayment(String method, String orderId) {
         Order order = orderRepository.findById(orderId);
-        Payment payment = new Payment(method, order.getId());
+        String randomUUIDString = UUID.randomUUID().toString();
+        Payment payment = new Payment(randomUUIDString, method, order.getId());
         paymentRepository.save(payment);
         return payment;
     }
