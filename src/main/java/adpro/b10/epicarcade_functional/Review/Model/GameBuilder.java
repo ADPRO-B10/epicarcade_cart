@@ -7,6 +7,7 @@ public class GameBuilder {
     private String name;
     private String description;
     private int price;
+    private int stock;
 
     public GameBuilder id(String id) {
         this.id = id;
@@ -28,6 +29,11 @@ public class GameBuilder {
         return this;
     }
 
+    public GameBuilder stock(int stock){
+        this.stock = stock;
+        return this;
+    }
+
     public Game build() {
         if (this.id == null){
             this.id = UUID.randomUUID().toString();
@@ -37,6 +43,7 @@ public class GameBuilder {
         game.setName(this.name);
         game.setDescription(this.description);
         game.setPrice(this.price);
+        game.setStock(this.stock);
         return game;
     }
 }
