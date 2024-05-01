@@ -14,7 +14,6 @@ public class Game {
     @Column(name = "idGame", nullable = false, unique = true)
     private String id;
 
-
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
