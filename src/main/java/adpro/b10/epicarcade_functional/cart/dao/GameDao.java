@@ -8,7 +8,7 @@ import java.awt.print.Pageable;
 import java.util.List;
 
 @Repository
-public interface ProductDao implements CrudRepository<Game, Integer> {
+public interface GameDao extends CrudRepository<Game, Integer> {
     public List<Game> findAll(Pageable pageable);
 
     public List<Game> findByProductName(String productName);

@@ -22,4 +22,10 @@ class CartController {
     public Cart addProductToCart(@PathVariable(name = "productId") Integer productId) {
         return cartService.addToCart(productId);
     }
+
+    @PreAuthorize("hasRole('BUYER')")
+    @GetMapping({"/getCartDetails"})
+    public void getCartDetails() {
+
+    }
 }

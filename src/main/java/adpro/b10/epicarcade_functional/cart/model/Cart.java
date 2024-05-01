@@ -1,10 +1,13 @@
 package adpro.b10.epicarcade_functional.cart.model;
 
+import adpro.b10.epicarcade_functional.model.UserEntity;
 import jakarta.persistence.*;
 import adpro.b10.epicarcade_functional.Review.Model.Game;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table
+@NoArgsConstructor
 public class Cart {
 
     @Id
