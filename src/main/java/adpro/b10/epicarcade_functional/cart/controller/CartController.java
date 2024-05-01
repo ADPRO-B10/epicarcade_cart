@@ -1,5 +1,7 @@
 package adpro.b10.epicarcade_functional.cart.controller;
 
+import adpro.b10.epicarcade_functional.cart.model.Cart;
+import adpro.b10.epicarcade_functional.cart.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -14,9 +16,10 @@ class CartController {
 
     @Autowired
     private CartService cartService;
+
     @PreAuthorize("hasRole('BUYER')")
     @GetMapping("/addToCart/{productId}")
-    public void addProductToCart(@PathVariable(name = "productId") Integer productId) {
-        // Add product to cart
+    public Cart addProductToCart(@PathVariable(name = "productId") Integer productId) {
+        return cartService.addToCart(productId);
     }
 }
