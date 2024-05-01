@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum PaymentMethod {
     GOPAY("GOPAY"),
-    OVO("OVO");
+    OVO("OVO"),
+    DEFAULT("NULL");
 
     private final String value;
 
