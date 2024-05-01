@@ -11,5 +11,5 @@ public interface OrderService {
 
     public Order findById(String id);
 
-    public List<Order> findAllByBuyer(String buyerId);
+    public List<Order> getOrdersByBuyerId(String buyerId);
 }
