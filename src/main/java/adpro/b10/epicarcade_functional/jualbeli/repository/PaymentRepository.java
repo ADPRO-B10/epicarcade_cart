@@ -1,7 +1,8 @@
 package adpro.b10.epicarcade_functional.jualbeli.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import adpro.b10.epicarcade_functional.jualbeli.model.Payment;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PaymentRepository extends JpaRepository<Payment, String> {
+    Payment findByOrder_Id(String orderId);
 }

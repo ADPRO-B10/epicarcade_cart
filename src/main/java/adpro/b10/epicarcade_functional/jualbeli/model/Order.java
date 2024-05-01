@@ -1,46 +1,46 @@
 package adpro.b10.epicarcade_functional.jualbeli.model;
 
 import adpro.b10.epicarcade_functional.Review.Model.Game;
-
-import lombok.Builder;
-import lombok.Getter;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 import adpro.b10.epicarcade_functional.jualbeli.enums.OrderStatus;
 
-@Builder
-@Getter
+import javax.persistence.*;
+import java.util.Map;
+
+@Entity
+@Table(name = "orders")
 public class Order {
-    String id;
-    Map<Game, Integer> gamesQuantity;
-    String buyerId;
-    String status;
+    @Id
+    private String id;
 
-    public Order(String id, Map<Game, Integer> gamesQuantity, String buyerId) {
-        this.id = id;
-        this.buyerId = buyerId;
-        this.status = OrderStatus.WAITING_PAYMENT.getValue();
+    @ManyToMany
+    @JoinTable(
+        name = "order_game", 
+        joinColumns = @JoinColumn(name = "order_id"), 
+        inverseJoinColumns = @JoinColumn(name = "game_id"))
+    @MapKeyColumn(name = "quantity")
+    private Map<Game, Integer> gamesQuantity;
 
-        if (gamesQuantity.isEmpty()) {
-            throw new IllegalArgumentException();
-        } else {
-            this.gamesQuantity = gamesQuantity;
-        }
-    }
+    @Column(name = "buyer_id")
+    private String buyerId;
 
-    public Order(String id, Map<Game, Integer> gamesQuantity, String buyerId, String status) {
-        this(id, gamesQuantity, buyerId);
-        this.setStatus(status);
-    }
+    @Column(name = "status")
+    private String status;
+
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private Payment payment;
 
     public void setStatus(String status) {
         if (OrderStatus.contains(status)) {
             this.status = status;
         } else {
             throw new IllegalArgumentException();
+        }
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+        if (payment.getOrder() != this) {
+            payment.setOrder(this);
         }
     }
 }
