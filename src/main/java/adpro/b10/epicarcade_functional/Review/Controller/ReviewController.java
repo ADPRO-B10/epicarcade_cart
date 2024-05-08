@@ -5,7 +5,6 @@ import adpro.b10.epicarcade_functional.Review.Model.Review;
 import adpro.b10.epicarcade_functional.Review.Service.GameService;
 import adpro.b10.epicarcade_functional.Review.Service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,21 +13,23 @@ import java.util.List;
 @RequestMapping("/reviews")
 public class ReviewController {
 
-//    @Autowired
+    @Autowired
     private GameService gameService;
 
-//    @Autowired
+    @Autowired
     private ReviewService reviewService;
 
     @GetMapping("/games")
-    public String listGames(Model model) {
-        List<Game> games = gameService.getAllGames();
-        model.addAttribute("games", games);
-        return "list-games";
+    public List<Game> listGames() {
+        return gameService.getAllGames();
     }
 
-    @PostMapping("/submit")
-    public Review submitReview(@RequestBody Review review) {
-        return reviewService.saveReview(review);
+    @PostMapping("/add-review")
+    public Review addReview(@RequestBody Review review) {
+        return reviewService.addReview(review);
+    }
+    @GetMapping("/game/{gameId}")
+    public List<Review> listReviewsByGame(@PathVariable String gameId) {
+        return reviewService.findReviewsByGame(gameId);
     }
 }
