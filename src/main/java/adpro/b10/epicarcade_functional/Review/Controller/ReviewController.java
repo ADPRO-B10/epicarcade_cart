@@ -24,6 +24,11 @@ public class ReviewController {
         return gameService.getAllGames();
     }
 
+//    @GetMapping("/list-review")
+//    public List<Review> listReview() {
+//        return gameService.getAllGames();
+//    }
+
     @PostMapping("/add-review")
     public Review addReview(@RequestBody Review review) {
         return reviewService.addReview(review);

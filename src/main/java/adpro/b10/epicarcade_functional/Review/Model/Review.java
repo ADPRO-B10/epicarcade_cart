@@ -25,7 +25,8 @@ public class Review {
 
     }
 
-    public Review(Game game, int rating, String comment){
+    public Review(String id, Game game, int rating, String comment){
+        this.id = id;
         this.game = game;
         this.rating = rating;
         this.comment = comment;

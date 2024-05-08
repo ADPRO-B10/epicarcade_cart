@@ -19,7 +19,7 @@ public class ReviewTest {
         Mockito.when(game.getName()).thenReturn(gameName);
         Mockito.when(game.getDescription()).thenReturn(gameDescription);
 
-        review = new Review(game, rating, comment);
+        review = new Review("1",game, rating, comment);
     }
 
     @Test

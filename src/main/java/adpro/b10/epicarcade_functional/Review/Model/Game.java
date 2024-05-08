@@ -29,6 +29,14 @@ public class Game {
     public Game(){
     }
 
+    public Game(String id, String name, String description, int price, int stock) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
+    }
+
     public String getId() {
         return id;
     }
