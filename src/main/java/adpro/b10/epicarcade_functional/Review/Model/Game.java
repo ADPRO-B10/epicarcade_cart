@@ -11,7 +11,7 @@ import java.util.UUID;
 public class Game {
 
     @Id
-    @Column(name = "idGame", nullable = false, unique = true)
+    @Column(name = "id_game", nullable = false, unique = true)
     private String id;
 
     @Column(name = "name", nullable = false, unique = true)

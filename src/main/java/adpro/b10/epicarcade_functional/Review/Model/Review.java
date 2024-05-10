@@ -15,10 +15,10 @@ public class Review {
     @ManyToOne
     private Game game;
 
-    @Column(name = "rating", nullable = false, unique = true)
+    @Column(name = "rating", nullable = false)
     private int rating;
 
-    @Column(name = "comment", nullable = false, unique = true)
+    @Column(name = "comment", nullable = false)
     private String comment;
 
     public Review(){
