@@ -24,12 +24,17 @@ public class ReviewController {
         return gameService.findAllGames();
     }
 
+    @GetMapping("/list-reviews")
+    public List<Review> listReviews() {
+        return reviewService.findAllReviews();
+    }
+
     @PostMapping("/add-review")
-    public Review addReview(@RequestBody Review review) {
-        return reviewService.addReview(review);
+    public Review addReview(@RequestBody String id_game, int rating, String comment) {
+        return reviewService.addReview(id_game,rating,comment);
     }
-    @GetMapping("/game/{gameId}")
-    public List<Review> listReviewsByGame(@PathVariable String gameId) {
-        return reviewService.findReviewsByGame(gameId);
-    }
+//    @GetMapping("/game/{Id_game}")
+//    public List<Review> listReviewsByGame(@PathVariable String Id_game) {
+//        return reviewService.findReviewsByGame(Id_game);
+//    }
 }

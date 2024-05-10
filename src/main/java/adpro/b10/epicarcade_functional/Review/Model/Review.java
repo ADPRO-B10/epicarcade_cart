@@ -2,21 +2,20 @@ package adpro.b10.epicarcade_functional.Review.Model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.Setter;
 
 @Entity
 @Table(name = "review")
 @Getter
 public class Review {
+    @Setter
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "idReview", updatable = false, nullable = false, unique = true)
+    @Column(name = "idReview")
     private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @Setter
     @JoinColumn(name = "id_game", nullable = false)
-    private Game game;
+    private String id_game;
 
     @Column(name = "rating", nullable = false)
     private int rating;
@@ -26,9 +25,9 @@ public class Review {
 
     public Review() {}
 
-    public Review(String id, Game game, int rating, String comment) {
+    public Review(String id, String id_game, int rating, String comment) {
         this.id = id;
-        this.game = game;
+        this.id_game = id_game;
         this.rating = rating;
         this.comment = comment;
     }
@@ -46,4 +45,5 @@ public class Review {
         }
         this.comment = comment;
     }
+
 }
