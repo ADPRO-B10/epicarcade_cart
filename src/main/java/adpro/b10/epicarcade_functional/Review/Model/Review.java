@@ -14,13 +14,13 @@ public class Review {
     private String id;
 
     @Setter
-    @JoinColumn(name = "id_game", nullable = false)
+    @JoinColumn(name = "id_game")
     private String id_game;
 
-    @Column(name = "rating", nullable = false)
+    @Column(name = "rating")
     private int rating;
 
-    @Column(name = "comment", nullable = false)
+    @Column(name = "comment")
     private String comment;
 
     public Review() {}

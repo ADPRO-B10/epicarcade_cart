@@ -21,8 +21,7 @@ public class ReviewService {
         review.setRating(rating);
         review.setComment(comment);
 
-        reviewRepository.save(review);
-        return review;
+        return reviewRepository.save(review);
     }
 
 //    public List<Review> findReviewsByGame(String Id_game) {
