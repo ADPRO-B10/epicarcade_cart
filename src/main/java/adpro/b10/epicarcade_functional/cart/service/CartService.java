@@ -8,5 +8,13 @@ import java.util.List;
 public interface CartService {
     public Cart addToCart(Integer productId);
 
-    public List<Cart> getCartDetails();
+    public Cart removeFromCart(String username, Integer productId);
+
+    public Cart incrementProductQuantity(String username, Integer productId);
+
+    public Cart decrementProductQuantity(String username, Integer productId);
+
+    public void checkout(String username);
+
+    public List<Cart> getCartDetails(String username);
 }

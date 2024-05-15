@@ -46,6 +46,18 @@ public class CartServiceImpl implements CartService{
         });
     }
 
+    public Cart incrementProductQuantity(String username, Integer productId) {
+        // Increment product quantity in the cart
+    }
+
+    public Cart decrementProductQuantity(String username, Integer productId) {
+        // Decrement product quantity in the cart
+    }
+
+    public void checkout(String username) {
+        // Perform checkout operation
+    }
+
     public List<Cart> getCartDetails() {
         String username = JwtRequestFilter.CURRENT_USER;
         UserEntity user = userDao.findById(username).get();
