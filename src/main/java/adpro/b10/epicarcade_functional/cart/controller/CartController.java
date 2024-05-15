@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/api/cart")
 class CartController {
 
     @Autowired
@@ -25,7 +27,7 @@ class CartController {
 
     @PreAuthorize("hasRole('BUYER')")
     @GetMapping({"/getCartDetails"})
-    public void getCartDetails() {
-
+    public List<Cart> getCartDetails() {
+        return cartService.getCartDetails();
     }
 }

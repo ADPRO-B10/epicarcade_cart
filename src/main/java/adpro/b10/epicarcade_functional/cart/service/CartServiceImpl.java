@@ -8,6 +8,8 @@ import adpro.b10.epicarcade_functional.model.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CartServiceImpl implements CartService{
     @Autowired
@@ -27,13 +29,17 @@ public class CartServiceImpl implements CartService{
         UserEntity user = null;
         if(username != null){
             UserEntity user = userDao.findById(username).get();
-        }
 
-        if (game != null && user != null) {
             Cart cart = new Cart(game, user);
+
             return cartDao.save(cart);
         }
 
         return null;
     }
+
+    public List<Cart> getCartDetails() {
+        String username = JwtRequestFilter.CURRENT_USER;
+        UserEntity user = userDao.findById(username).get();
+        return cartDao.findByUser(user);
 }
