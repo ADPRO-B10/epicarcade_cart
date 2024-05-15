@@ -38,6 +38,14 @@ public class CartServiceImpl implements CartService{
         return null;
     }
 
+    public void removeFromCart(String username, CartItemDTO cartItemDTO) {
+        Optional<Cart> cartOpt = cartRepository.findByUsername(username);
+        cartOpt.ifPresent(cart -> {
+            cart.removeItem(cartItemDTO.toEntity());
+            cartRepository.save(cart);
+        });
+    }
+
     public List<Cart> getCartDetails() {
         String username = JwtRequestFilter.CURRENT_USER;
         UserEntity user = userDao.findById(username).get();
