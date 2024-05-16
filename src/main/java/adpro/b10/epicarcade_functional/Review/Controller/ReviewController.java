@@ -34,4 +34,10 @@ public class ReviewController {
     public CompletableFuture<Review> addReview(@RequestBody AddReviewDTO reviewDTO) {
         return reviewService.addReview(reviewDTO.getId_game(), reviewDTO.getRating(), reviewDTO.getComment());
     }
+
+    @DeleteMapping("/delete-review/{reviewId}")
+    public CompletableFuture<Void> deleteReview(@PathVariable String reviewId) {
+        return reviewService.deleteReview(reviewId);
+    }
+
 }

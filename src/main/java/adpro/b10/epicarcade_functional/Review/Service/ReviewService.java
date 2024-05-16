@@ -34,4 +34,12 @@ public class ReviewService {
     public CompletableFuture<List<Review>> findAllReviews() {
         return CompletableFuture.supplyAsync(() -> reviewRepository.findAll());
     }
+
+    @Async("taskExecutorForHeavyTasks")
+    public CompletableFuture<Void> deleteReview(String reviewId) {
+        return CompletableFuture.runAsync(() -> {
+            reviewRepository.deleteById(reviewId);
+        });
+    }
+
 }
