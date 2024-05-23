@@ -1,10 +1,15 @@
 package adpro.b10.epicarcade_functional.jualbeli.service;
 
+import adpro.b10.epicarcade_functional.jualbeli.enums.PaymentStatus;
 import adpro.b10.epicarcade_functional.jualbeli.model.Payment;
 
+import java.util.Optional;
+
 public interface PaymentService {
-    Payment createPayment(Payment payment);
-    Payment updatePaymentMethod(String paymentId, String newMethod);
-    Payment getPaymentByOrderId(String orderId);
-    void applyPaymentStrategy(String paymentId, PaymentStrategy strategy);
+    Optional<Payment> savePayment(Payment payment);
+    Optional<Payment> getPaymentById(Long id);
+    void deletePayment(Long id);
+    Optional<Payment> updatePaymentStatus(Long id, PaymentStatus status);
+    Optional<Payment> getPaymentByOrderId(Long orderId);
+    Optional<Payment> applyPaymentStrategy(Long paymentId, PaymentStrategy strategy);
 }

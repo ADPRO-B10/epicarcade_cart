@@ -1,51 +1,40 @@
 package adpro.b10.epicarcade_functional.jualbeli.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import adpro.b10.epicarcade_functional.jualbeli.enums.PaymentMethod;
+import adpro.b10.epicarcade_functional.jualbeli.enums.PaymentStatus;
 
 import javax.persistence.*;
-
-import adpro.b10.epicarcade_functional.jualbeli.enums.PaymentStatus;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "payments")
 @Getter
-@Setter
 @NoArgsConstructor
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
-    @Column(name = "method")
-    private String method;
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod method;
 
     @OneToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id")
+    @NotNull
     private Order order;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private PaymentStatus status;
 
-    public Payment(String id, String method, Order order) {
-        this.id = id;
+    public Payment(String method, Order order) {
         this.order = order;
         this.method = method;
-        this.status = PaymentStatus.PENDING.getValue();
+        this.status = PaymentStatus.PENDING;
     }
 
-    public Payment(String id, String method, Order order, String status) {
-        this(id, method, order);
-        this.setStatus(status);
-    }
-
-    public void setStatus(String status) {
-        if (PaymentStatus.contains(status)) {
-            this.status = status;
-        } else {
-            throw new IllegalArgumentException();
-        }
+    public void setStatus(PaymentStatus status) {
+        this.status = status;
     }
 
     public void setOrder(Order order) {
@@ -55,9 +44,18 @@ public class Payment {
         }
     }
 
-    public double getAmount() {
-        return order.getGamesQuantity().entrySet().stream()
-            .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
-            .sum();
+    public BigDecimal getAmount() {
+        BigDecimal amount = order.getOrderGames().stream()
+            .map(orderGame -> orderGame.getGame().getPrice().multiply(BigDecimal.valueOf(orderGame.getQuantity())))
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return amount.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public void setMethod(PaymentMethod method) {
+        this.method = method;
+    }
+
+    public PaymentMethod getMethod() {
+        return method;
     }
 }

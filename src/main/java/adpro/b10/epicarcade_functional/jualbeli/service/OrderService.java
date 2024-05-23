@@ -1,15 +1,18 @@
-package adpro.b10.epicarcade_functional.jualbeli.service;
+package main.java.adpro.b10.epicarcade_functional.jualbeli.service;
 
+import adpro.b10.epicarcade_functional.jualbeli.enums.OrderStatus;
+import adpro.b10.epicarcade_functional.jualbeli.enums.PaymentStatus;
 import adpro.b10.epicarcade_functional.jualbeli.model.Order;
+import adpro.b10.epicarcade_functional.jualbeli.model.Payment;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface OrderService {
-    public Order createOrder(Order order);
-
-    public Order updateStatus(String orderId, String status);
-
-    public Order findById(String id);
-
-    public List<Order> getOrdersByBuyerId(String buyerId);
+    Order saveOrder(Order order);
+    Order getOrderByUserId(String userId);
+    Optional<Order> getOrderById(String id);
+    void deleteOrder(String id);
+    Optional<Order> updateOrderStatus(String id, OrderStatus status);
+    Payment createPayment(String orderId, Payment payment);
+    Optional<Payment> updatePaymentStatus(String orderId, PaymentStatus status);
 }
