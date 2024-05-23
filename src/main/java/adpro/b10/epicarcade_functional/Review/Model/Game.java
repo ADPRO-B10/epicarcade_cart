@@ -11,7 +11,7 @@ import java.util.UUID;
 public class Game {
 
     @Id
-    @Column(name = "idGame", nullable = false, unique = true)
+    @Column(name = "id_game", nullable = false, unique = true)
     private String id;
 
     @Column(name = "name", nullable = false, unique = true)
@@ -27,6 +27,14 @@ public class Game {
     private int stock;
 
     public Game(){
+    }
+
+    public Game(String id, String name, String description, int price, int stock) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
     }
 
     public String getId() {
