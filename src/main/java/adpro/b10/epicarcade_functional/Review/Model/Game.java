@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.util.UUID;
 
 @Entity
-@Table(name = "Game")
+@Table(name = "game")
 @Getter
 public class Game {
 
@@ -25,13 +25,6 @@ public class Game {
 
     @Column(name = "stock", nullable = false)
     private int stock;
-
-//    @Column(name = "penjual", nullable = false)
-//    private User penjual; ini belum diimplement
-
-
-
-
 
     public Game(){
     }

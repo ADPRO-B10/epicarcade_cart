@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
-@Table(name = "Review")
+@Table(name = "review")
 @Getter
 public class Review {
 
@@ -12,7 +12,7 @@ public class Review {
     @Column(name = "idReview", nullable = false, unique = true)
     private String id;
 
-    @Column(name = "game", nullable = false, unique = true)
+    @ManyToOne
     private Game game;
 
     @Column(name = "rating", nullable = false, unique = true)
@@ -20,6 +20,10 @@ public class Review {
 
     @Column(name = "comment", nullable = false, unique = true)
     private String comment;
+
+    public Review(){
+
+    }
 
     public Review(Game game, int rating, String comment){
         this.game = game;
