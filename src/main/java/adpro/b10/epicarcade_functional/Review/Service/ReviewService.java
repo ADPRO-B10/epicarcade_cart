@@ -19,7 +19,7 @@ public class ReviewService {
 
     @Async("taskExecutorForHeavyTasks")
     public CompletableFuture<Review> addReview(String id_game, int rating, String comment) {
-        return CompletableFuture.supplyAsync(() -> {
+        return CompletableFuture.supplyAsync(   () -> {
             Review review = new Review();
             review.setId(UUID.randomUUID().toString());
             review.setId_game(id_game);
