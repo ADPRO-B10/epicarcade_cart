@@ -17,9 +17,7 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private String username;
-
     private String email;
 
     @ManyToMany (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
