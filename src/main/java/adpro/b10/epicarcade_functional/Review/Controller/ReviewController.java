@@ -32,6 +32,10 @@ public class ReviewController {
 
     @PostMapping("/add-review")
     public CompletableFuture<Review> addReview(@RequestBody AddReviewDTO reviewDTO) {
+        System.out.println("Received reviewDTO: ");
+        System.out.println("id_game: " + reviewDTO.getId_game());
+        System.out.println("rating: " + reviewDTO.getRating());
+        System.out.println("comment: " + reviewDTO.getComment());
         return reviewService.addReview(reviewDTO.getId_game(), reviewDTO.getRating(), reviewDTO.getComment());
     }
 
