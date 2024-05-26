@@ -9,32 +9,21 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+@Setter
+@Getter
 @Entity
-@Table
 @NoArgsConstructor
+@Table (name = "shopping_carts")
 public class Cart {
 
-    @Setter
-    @Getter
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer cartId;
+    private String userEmail;
 
-    @OneToOne
-    private Map<String, Integer> games;
+    private String currentStatus;
 
-    @OneToOne
-    private BuyerEntity buyer;
-
-    public Cart() {
-        this.games = new HashMap<>();
-        this.totalPrice = 0.0;
-    }
-
-    public Cart(ArrayList<game> games, BuyerEntity buyer) {
-        this.game = game;
-        this.buyer = buyer;
-    }
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartItem> items; // List to hold cart items
 }
