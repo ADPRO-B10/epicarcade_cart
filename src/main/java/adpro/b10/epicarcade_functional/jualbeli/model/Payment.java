@@ -1,51 +1,50 @@
 package adpro.b10.epicarcade_functional.jualbeli.model;
 
+import adpro.b10.epicarcade_functional.jualbeli.enums.PaymentMethod;
+import adpro.b10.epicarcade_functional.jualbeli.enums.PaymentStatus;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-
-import adpro.b10.epicarcade_functional.jualbeli.enums.PaymentStatus;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.UUID;
 
 @Entity
 @Table(name = "payments")
 @Getter
-@Setter
 @NoArgsConstructor
 public class Payment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "method")
-    private String method;
+    private PaymentMethod method;
 
     @OneToOne
-    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    @JoinColumn(name = "order_id")
     private Order order;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private PaymentStatus status;
+    
+    @Column(precision = 15, scale = 2)
+    private BigDecimal amount;
 
-    public Payment(String id, String method, Order order) {
-        this.id = id;
+    public Payment(PaymentMethod method, Order order) {
         this.order = order;
         this.method = method;
-        this.status = PaymentStatus.PENDING.getValue();
+        this.status = PaymentStatus.PENDING;
+        this.amount = order.getTotalPrice();
     }
 
-    public Payment(String id, String method, Order order, String status) {
-        this(id, method, order);
-        this.setStatus(status);
-    }
-
-    public void setStatus(String status) {
-        if (PaymentStatus.contains(status)) {
-            this.status = status;
-        } else {
-            throw new IllegalArgumentException();
-        }
+    public void setStatus(PaymentStatus status) {
+        this.status = status;
     }
 
     public void setOrder(Order order) {
@@ -55,9 +54,22 @@ public class Payment {
         }
     }
 
-    public double getAmount() {
-        return order.getGamesQuantity().entrySet().stream()
-            .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
-            .sum();
+    public void setMethod(PaymentMethod method) {
+        this.method = method;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public PaymentMethod getMethod() {
+        return method;
+    }
+
+    @PrePersist
+    public void generateId() {
+        if (id == null) {
+            id = UUID.randomUUID().toString();
+        }
     }
 }

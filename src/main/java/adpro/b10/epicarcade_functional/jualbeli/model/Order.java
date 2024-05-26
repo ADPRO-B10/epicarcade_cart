@@ -1,49 +1,59 @@
 package adpro.b10.epicarcade_functional.jualbeli.model;
 
-import adpro.b10.epicarcade_functional.Review.Model.Game;
 import adpro.b10.epicarcade_functional.jualbeli.enums.OrderStatus;
+import adpro.b10.epicarcade_functional.jualbeli.model.OrderGame;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Entity
 @Table(name = "orders")
+@Getter
+@Setter
 public class Order {
     @Id
     private String id;
 
-    @ManyToMany
-    @JoinTable(
-        name = "order_game", 
-        joinColumns = @JoinColumn(name = "order_id"), 
-        inverseJoinColumns = @JoinColumn(name = "game_id"))
-    @MapKeyColumn(name = "quantity")
-    private Map<Game, Integer> gamesQuantity;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<OrderGame> orderGames;
 
+    @NotNull
     @Column(name = "buyer_id")
     private String buyerId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private OrderStatus status;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @MapsId
     private Payment payment;
 
-    public void setStatus(String status) {
-        if (OrderStatus.contains(status)) {
-            this.status = status;
-        } else {
-            throw new IllegalArgumentException();
-        }
+    @Column(name = "order_date")
+    private LocalDateTime orderDate;
+
+    @Column(name = "total_price")
+    private BigDecimal totalPrice;
+
+    public Order() {
+        this.id = UUID.randomUUID().toString();
     }
 
-    public void setPayment(Payment payment) {
-        this.payment = payment;
-        if (payment.getOrder() != this) {
-            payment.setOrder(this);
+    @PreUpdate
+    public void updatePaymentAmount() {
+        if (payment != null) {
+            payment.setAmount(getTotalPrice());
         }
     }
 }
