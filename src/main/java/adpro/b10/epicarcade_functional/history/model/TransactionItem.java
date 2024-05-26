@@ -28,4 +28,15 @@ public class TransactionItem {
     @Column(nullable = false)
     private Date transactionDate;
 
+    public TransactionItem() {
+    }
+
+    public TransactionItem(Long buyerId, Long sellerId, Long productId, double amount, String status, Date transactionDate) {
+        this.buyerId = buyerId;
+        this.sellerId = sellerId;
+        this.productId = productId;
+        this.amount = amount;
+        this.status = status;
+        this.transactionDate = transactionDate;
+    }
 }
