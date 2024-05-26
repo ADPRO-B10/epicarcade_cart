@@ -93,7 +93,10 @@ public class OrderServiceImplTest {
         when(paymentService.createPaymentWithOrder(any(PaymentDto.class), any(Order.class))).thenReturn(mockPaymentDto);
         when(orderMapper.orderToOrderDto(any(Order.class))).thenReturn(orderDto);
         CompletableFuture<Optional<OrderDto>> completedFuture = CompletableFuture.completedFuture(Optional.of(mockOrderDto));
-        when(orderService.createOrderFromCart()).thenReturn(completedFuture);
+        // when(orderService.createOrderFromCart()).thenReturn(completedFuture);
+        Order order = new Order();
+        when(orderRepository.save(any(Order.class))).thenReturn(order);
+        when(orderMapper.orderToOrderDto(order)).thenReturn(mockOrderDto);
 
         // Act
         CompletableFuture<Optional<OrderDto>> futureResult = orderService.createOrderFromCart();
