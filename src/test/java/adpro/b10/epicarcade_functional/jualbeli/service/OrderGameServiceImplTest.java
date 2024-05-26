@@ -14,6 +14,8 @@ import org.mockito.MockitoAnnotations;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -42,20 +44,22 @@ public class OrderGameServiceImplTest {
         when(orderGameRepository.save(orderGame)).thenReturn(orderGame);
         when(orderGameMapper.orderGameToOrderGameDTO(orderGame)).thenReturn(orderGameDto);
 
-        OrderGameDto result = orderGameService.saveOrderGame(orderGameDto);
+        Future<OrderGameDto> result = orderGameService.saveOrderGame(orderGameDto);
 
         assertEquals(orderGameDto, result);
         verify(orderGameRepository, times(1)).save(orderGame);
     }
 
     @Test
-    public void testGetOrderGameById() {
+    public void testGetOrderGameById() throws ExecutionException, InterruptedException {
         OrderGameDto orderGameDto = new OrderGameDto();
         OrderGame orderGame = new OrderGame();
         when(orderGameRepository.findById("1")).thenReturn(Optional.of(orderGame));
         when(orderGameMapper.orderGameToOrderGameDTO(orderGame)).thenReturn(orderGameDto);
 
-        Optional<OrderGameDto> result = orderGameService.getOrderGameById("1");
+        Future<Optional<OrderGameDto>> futureResult = orderGameService.getOrderGameById("1");
+
+        Optional<OrderGameDto> result = futureResult.get();
 
         assertEquals(Optional.of(orderGameDto), result);
     }
@@ -73,7 +77,7 @@ public class OrderGameServiceImplTest {
         when(orderGameRepository.findByOrderId("1")).thenReturn(Optional.of(Arrays.asList(orderGame)));
         when(orderGameMapper.orderGameToOrderGameDTO(orderGame)).thenReturn(orderGameDto);
 
-        List<OrderGameDto> result = orderGameService.getOrderGamesByOrderId("1");
+        Future<List<OrderGameDto>> result = orderGameService.getOrderGamesByOrderId("1");
 
         assertEquals(List.of(orderGameDto), result);
     }
