@@ -3,6 +3,7 @@ package adpro.b10.epicarcade_functional.cart.service;
 import adpro.b10.epicarcade_functional.cart.model.Cart;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface CartService {
@@ -16,5 +17,5 @@ public interface CartService {
 
     public void checkout(String username);
 
-    public List<Cart> getCartDetails(String username);
+    public Map<String, Integer> getCartDetails(String username);
 }

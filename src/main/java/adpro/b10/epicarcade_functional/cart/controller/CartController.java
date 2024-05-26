@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/cart")
@@ -45,15 +46,22 @@ class CartController {
     }
 
     @PutMapping("update")
-    public ResponseEntity<CartDTO> updateItem(@RequestParam String email, @RequestParam String itemId, @RequestParam int quantity) {
+    public ResponseEntity<CartDTO> updateItem(@RequestParam String email, @RequestParam String itemId, @RequestParam Integer quantity) {
         CartDTO response = cartService.updateItem(email, itemId, quantity);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping({"getCartDetails"})
     public List<Cart> getCartDetails(Authentication authentication) {
-        String username = userDetails.getUsername();
-        List<Cart> cartDetails = cartService.getCartDetails(username);
-        return cartService.getCartDetails();
+        String userEmail = authentication.getName();
+        List<CartItemDTO> cartDetails = cartService.getCartDetails(username);
+        Map<String, Integer> itemMap =
+        return new ResponseEntity<>(
+                new CartDTO(
+                        userEmail,
+                        cartDetails,
+                        cartService.getTotalPrice(user)
+                )
+        )
     }
 }

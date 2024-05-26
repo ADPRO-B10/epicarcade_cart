@@ -1,6 +1,7 @@
 package adpro.b10.epicarcade_functional.cart.service;
 
 import adpro.b10.epicarcade_functional.cart.dto.CartDTO;
+import adpro.b10.epicarcade_functional.cart.model.CartItem;
 import adpro.b10.epicarcade_functional.cart.repository.CartDao;
 import adpro.b10.epicarcade_functional.cart.repository.CartRepository;
 import adpro.b10.epicarcade_functional.cart.model.Cart;
@@ -21,8 +22,7 @@ public class CartServiceImpl implements CartService{
     private CartRepository shoppingCartRepository;
 
     public Cart addToCart(String email, String itemId, Integer quantity) {
-        Map<String, String> response = new HashMap<>();
-        Cart cart = CartRepository.findByUserEmail(email);
+        Cart cart = shoppingCartRepository.findByUserEmail(email);
 
         if (cart == null) {
             cart = new Cart();
@@ -39,7 +39,7 @@ public class CartServiceImpl implements CartService{
     }
 
     public void removeFromCart(String username, CartItemDTO cartItemDTO) {
-        Optional<Cart> cartOpt = cartRepository.findByUsername(username);
+        Optional<Cart> cartOpt = shoppingCartRepository.findByUsername(username);
         cartOpt.ifPresent(cart -> {
             cart.removeItem(cartItemDTO.toEntity());
             cartRepository.save(cart);
@@ -58,9 +58,17 @@ public class CartServiceImpl implements CartService{
         // Perform checkout operation
     }
 
-    public List<Cart> getCartDetails() {
-        String username = JwtRequestFilter.CURRENT_USER;
-        UserEntity user = userDao.findById(username).get();
-        return cartDao.findByUser(user);
+    public Map<String, Integer> getCartDetails(String userEmail) {
+        Cart cart = shoppingCartRepository.findByUserEmail(userEmail);
+        Map<String, Integer> cartDetails = new HashMap<>();
+
+        if (cart != null) {
+            List<CartItem> cartItems = cart.getItems();
+            for (CartItem item : cartItems) {
+                cartDetails.put(item.getProductId(), item.getQuantity());
+            }
+        }
+
+        return cartDetails;
     }
 }
