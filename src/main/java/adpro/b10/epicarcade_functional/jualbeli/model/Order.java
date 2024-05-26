@@ -2,6 +2,9 @@ package adpro.b10.epicarcade_functional.jualbeli.model;
 
 import adpro.b10.epicarcade_functional.jualbeli.enums.OrderStatus;
 import adpro.b10.epicarcade_functional.jualbeli.model.OrderGame;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
