@@ -8,13 +8,12 @@ public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private String userEmail;
     private String productId;
-    private int quantity;
+    private Integer productPrice;
+    private Integer quantity;
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
     private Cart cart;
-
-    // Getters and Setters
 }

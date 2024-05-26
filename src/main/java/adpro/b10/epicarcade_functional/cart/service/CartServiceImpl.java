@@ -21,8 +21,8 @@ public class CartServiceImpl implements CartService{
 //    @Autowired
 //    private UserDao userDao;
 
-    public Cart addToCart(Integer productId) {
-        Game game = gameDao.findById(productId).get();
+    public Cart addToCart(String email, String itemId, Integer quantity) {
+        Cart cart = CartDao.findByEmail(email);
 
         String username = JwtRequestFilter.CURRENT_USER;
 
