@@ -39,7 +39,7 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-<<<<<<<<< Temporary merge branch 1
+
 	implementation("jakarta.persistence:jakarta.persistence-api:3.0.0")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("jakarta.validation:jakarta.validation-api:3.0.0")
