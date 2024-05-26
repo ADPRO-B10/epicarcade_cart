@@ -1,9 +1,9 @@
-package adpro.b10.epicarcade_functional.model;
+package adpro.b10.epicarcade_functional.history.model;
 
-import adpro.b10.epicarcade_functional.enums.TransactionStatus;
+import adpro.b10.epicarcade_functional.history.enums.TransactionStatus;
+import adpro.b10.epicarcade_functional.Review.Model.Game;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.Builder;
 
 import java.util.List;
