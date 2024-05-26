@@ -1,9 +1,11 @@
 package adpro.b10.epicarcade_functional.model;
 
 import static org.junit.Assert.*;
+
+import adpro.b10.epicarcade_functional.history.model.Transaction;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.*;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
