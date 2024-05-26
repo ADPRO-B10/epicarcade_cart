@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 public interface OrderService {
-    CompletableFuture<Optional<OrderDto>> createOrderFromCart(String cartId);
+    CompletableFuture<Optional<OrderDto>> createOrderFromCart();
     OrderDto saveOrder(OrderDto orderDto);
     Optional<OrderDto> getOrderByBuyerId(String buyerId);
     Optional<OrderDto> getOrderById(String buyerId);

@@ -19,9 +19,9 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @PostMapping("/cart/{cartId}")
-    public CompletableFuture<ResponseEntity<OrderDto>> createOrderFromCart(@PathVariable String cartId) {
-        return orderService.createOrderFromCart(cartId)
+    @PostMapping("/cart")
+    public CompletableFuture<ResponseEntity<OrderDto>> createOrderFromCart() {
+        return orderService.createOrderFromCart()
                            .thenApply(orderDto -> orderDto.map(ResponseEntity::ok)
                                                           .orElseGet(() -> ResponseEntity.notFound().build()));
     }
