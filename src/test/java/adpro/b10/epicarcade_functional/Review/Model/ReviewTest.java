@@ -1,70 +1,76 @@
 package adpro.b10.epicarcade_functional.Review.Model;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ReviewTest {
-    private Game game;
-    private Review review;
-    private final String gameName = "Chess";
-    private final String gameDescription = "Strategic board game";
-    private final int rating = 4;
-    private final String comment = "Challenging and fun.";
 
-    @BeforeEach
-    public void setUp() {
-        game = Mockito.mock(Game.class);
-        Mockito.when(game.getName()).thenReturn(gameName);
-        Mockito.when(game.getDescription()).thenReturn(gameDescription);
+    @Test
+    public void testCreateReview() {
+        Review review = new Review("1", "game1", 5, "Great game!");
 
-        review = new Review(game, rating, comment);
+        assertNotNull(review);
+        assertEquals("1", review.getId());
+        assertEquals("game1", review.getId_game());
+        assertEquals(5, review.getRating());
+        assertEquals("Great game!", review.getComment());
     }
 
     @Test
-    public void testReviewConstructor() {
-        assertNotNull(review.getGame());
-        assertEquals(rating, review.getRating());
-        assertEquals(comment, review.getComment());
+    public void testSetValidRating() {
+        Review review = new Review();
+        review.setRating(4);
+
+        assertEquals(4, review.getRating());
     }
 
     @Test
-    public void testSetRating() {
-        int newRating = 5;
-        review.setRating(newRating);
-        assertEquals(newRating, review.getRating());
+    public void testSetInvalidRating() {
+        Review review = new Review();
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            review.setRating(0);
+        });
+
+        String expectedMessage = "Rating has to be between 1 and 5";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+
+        exception = assertThrows(IllegalArgumentException.class, () -> {
+            review.setRating(6);
+        });
+
+        actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
-    public void testSetRatingWithInvalidValue() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> review.setRating(0));
-        assertEquals("Rating has to be 1-5", exception.getMessage());
+    public void testSetValidComment() {
+        Review review = new Review();
+        review.setComment("Good game");
+
+        assertEquals("Good game", review.getComment());
     }
 
     @Test
-    public void testSetComment() {
-        String newComment = "WOW!!!";
-        review.setComment(newComment);
-        assertEquals(newComment, review.getComment());
+    public void testSetInvalidComment() {
+        Review review = new Review();
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            review.setComment("");
+        });
+
+        String expectedMessage = "Comment cannot be empty";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+
+        exception = assertThrows(IllegalArgumentException.class, () -> {
+            review.setComment(null);
+        });
+
+        actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
-    @Test
-    public void testSetCommentWithNullValue() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> review.setComment(null));
-        assertEquals("Game comment cannot be empty", exception.getMessage());
-    }
-
-    @Test
-    public void testSetNameOnGame() {
-        String newName = "GTA 6";
-        review.setName(game, newName);
-        Mockito.verify(game).setName(newName);
-    }
-
-    @Test
-    public void testSetNameWithNullValue() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> review.setName(game, null));
-        assertEquals("Game name cannot be empty", exception.getMessage());
-    }
 }
