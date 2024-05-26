@@ -1,4 +1,4 @@
-package adpro.b10.epicarcade_functional.enums;
+package adpro.b10.epicarcade_functional.history.enums;
 
 import lombok.Getter;
 
