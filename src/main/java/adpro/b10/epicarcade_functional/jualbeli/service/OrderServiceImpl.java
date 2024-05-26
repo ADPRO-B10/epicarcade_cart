@@ -49,8 +49,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public CompletableFuture<Optional<OrderDto>> createOrderFromCart() {
         // Change URL based on cart service
-        // ResponseEntity<Map> response = restTemplate.getForEntity("http://34.34.219.228/api/cart/getCartDetails", Map.class);
-        ResponseEntity<Map> response = restTemplate.getForEntity("http://localhost:8080/api/cart/getCartDetails", Map.class);
+        ResponseEntity<Map> response = restTemplate.getForEntity("http://34.34.219.228/api/cart/getCartDetails", Map.class);
         Map<String, Object> cartDTO = response.getBody();
     
         if (cartDTO == null) {
