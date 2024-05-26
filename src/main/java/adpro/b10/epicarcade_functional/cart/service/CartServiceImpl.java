@@ -1,15 +1,11 @@
 package adpro.b10.epicarcade_functional.cart.service;
 
-import adpro.b10.epicarcade_functional.cart.dto.CartDTO;
-import adpro.b10.epicarcade_functional.cart.dto.CartItemDTO;
 import adpro.b10.epicarcade_functional.cart.model.CartItem;
 import adpro.b10.epicarcade_functional.cart.repository.CartDao;
 import adpro.b10.epicarcade_functional.cart.repository.CartRepository;
 import adpro.b10.epicarcade_functional.cart.model.Cart;
 import adpro.b10.epicarcade_functional.model.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -57,12 +53,12 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public void removeFromCart(String email, CartItemDTO cartItemDTO) {
+    public void removeFromCart(String email, String itemId) {
         Cart cart = shoppingCartRepository.findByUserEmail(email);
 
         if (cart != null) {
             List<CartItem> items = cart.getItems();
-            items.removeIf(item -> item.getProductId().equals(cartItemDTO.getGameId()));
+            items.removeIf(item -> item.getProductId().equals(itemId));
             cart.setItems(items);
             shoppingCartRepository.save(cart);
         }
@@ -86,5 +82,20 @@ public class CartServiceImpl implements CartService{
         }
 
         return cartDetails;
+    }
+
+
+    @Override
+    public double getTotalPrice(Cart cart) {
+        double totalPrice = 0;
+        for (CartItem item : cart.getItems()) {
+            totalPrice += item.getProductPrice() * item.getQuantity();
+        }
+        return totalPrice;
+    }
+
+    @Override
+    public Cart getCartByUserEmail(String userEmail) {
+        Cart cart = shoppingCartRepository.findByUserEmail(userEmail);
     }
 }

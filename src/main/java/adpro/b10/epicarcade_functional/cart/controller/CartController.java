@@ -21,47 +21,48 @@ class CartController {
     private CartService cartService;
 
     @PostMapping("add")
-    public ResponseEntity<CartDTO> addItemToCart(@RequestBody CartItemDTO cartItemDTO, Authentication authentication) {
-        String user = authentication.getName();
-        cartService.addToCart(user, cartItemDTO);
+    public ResponseEntity<String> addItemToCart(@RequestBody CartItemDTO cartItemDTO, Authentication authentication) {
+        String userEmail = authentication.getName();
+        cartService.addToCart(userEmail, cartItemDTO.getGameId(), cartItemDTO.getQuantity());
         return ResponseEntity.ok("Item added to cart");
     }
 
-    @PostMapping("increment")
-    public ResponseEntity<CartDTO> incrementItem(@RequestParam String email, @RequestParam String itemId) {
-        CartDTO response = cartService.incrementItem(email, itemId);
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("decrement")
-    public ResponseEntity<CartDTO> decrementItem(@RequestParam String email, @RequestParam String itemId) {
-        CartDTO response = cartService.decrementItem(email, itemId);
-        return ResponseEntity.ok(response);
-    }
+//    @PostMapping("increment")
+//    public ResponseEntity<CartDTO> incrementItem(@RequestParam String email, @RequestParam String itemId) {
+//        CartDTO response = cartService.incrementItem(email, itemId);
+//        return ResponseEntity.ok(response);
+//    }
+//
+//    @PostMapping("decrement")
+//    public ResponseEntity<CartDTO> decrementItem(@RequestParam String email, @RequestParam String itemId) {
+//        CartDTO response = cartService.decrementItem(email, itemId);
+//        return ResponseEntity.ok(response);
+//    }
 
     @DeleteMapping("remove")
-    public ResponseEntity<CartDTO> removeItem(@RequestParam String email, @RequestParam String itemId) {
-        CartDTO response = cartService.deleteItem(email, itemId);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<String> removeItem(@RequestParam String itemId, Authentication authentication) {
+        String userEmail = authentication.getName();
+        cartService.removeFromCart(userEmail, itemId);
+        return ResponseEntity.ok("Item removed from cart");
     }
 
-    @PutMapping("update")
-    public ResponseEntity<CartDTO> updateItem(@RequestParam String email, @RequestParam String itemId, @RequestParam Integer quantity) {
-        CartDTO response = cartService.updateItem(email, itemId, quantity);
-        return ResponseEntity.ok(response);
-    }
+//    @PutMapping("update")
+//    public ResponseEntity<CartDTO> updateItem(@RequestParam String email, @RequestParam String itemId, @RequestParam Integer quantity) {
+//        CartDTO response = cartService.updateItem(email, itemId, quantity);
+//        return ResponseEntity.ok(response);
+//    }
 
     @GetMapping({"getCartDetails"})
-    public List<Cart> getCartDetails(Authentication authentication) {
+    public ResponseEntity<CartDTO> getCartDetails(Authentication authentication) {
         String userEmail = authentication.getName();
-        List<CartItemDTO> cartDetails = cartService.getCartDetails(username);
-        Map<String, Integer> itemMap =
-        return new ResponseEntity<>(
+        Map<String, Integer> itemMap = cartService.getCartDetails(userEmail);
+        double totalPrice = cartService.getTotalPrice(cartService.getCartByUserEmail(userEmail));
+        return ResponseEntity.ok(
                 new CartDTO(
                         userEmail,
-                        cartDetails,
-                        cartService.getTotalPrice(user)
+                        itemMap,
+                        totalPrice
                 )
-        )
+        );
     }
 }

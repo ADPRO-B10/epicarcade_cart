@@ -10,8 +10,8 @@ import java.util.Map;
 public interface CartService {
     public Cart addToCart(String email, String itemId, Integer quantity);
 
-    public void removeFromCart(String email, CartItemDTO cartItemDTO)
-//
+    public void removeFromCart(String email, String itemId);
+
 //    public Cart incrementProductQuantity(String username, Integer productId);
 //
 //    public Cart decrementProductQuantity(String username, Integer productId);
@@ -19,4 +19,8 @@ public interface CartService {
 //    public void checkout(String username);
 
     public Map<String, Integer> getCartDetails(String username);
+
+    double getTotalPrice(Cart cart);
+
+    Cart getCartByUserEmail(String userEmail);
 }
