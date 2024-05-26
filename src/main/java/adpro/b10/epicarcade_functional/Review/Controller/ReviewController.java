@@ -44,4 +44,8 @@ public class ReviewController {
         return reviewService.deleteReview(reviewId);
     }
 
+//    @PutMapping("/edit-review/{reviewId}")
+//    public CompletableFuture<Review> editReview(@PathVariable String reviewId, @RequestBody AddReviewDTO reviewDTO) {
+//        return reviewService.editReview(reviewId, reviewDTO.getId_game(), reviewDTO.getRating(), reviewDTO.getComment());
+//    }
 }

@@ -42,4 +42,15 @@ public class ReviewService {
         });
     }
 
+//    @Async("taskExecutorForHeavyTasks")
+//    public CompletableFuture<Review> editReview(String reviewId, String id_game, int rating, String comment) {
+//        return CompletableFuture.supplyAsync(() -> {
+//            Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new RuntimeException("Review not found"));
+//            review.setId_game(id_game);
+//            review.setRating(rating);
+//            review.setComment(comment);
+//            return reviewRepository.save(review);
+//        });
+//    }
+
 }
