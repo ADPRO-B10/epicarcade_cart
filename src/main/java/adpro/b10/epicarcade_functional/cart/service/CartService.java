@@ -11,12 +11,12 @@ public interface CartService {
     public Cart addToCart(String email, String itemId, Integer quantity);
 
     public void removeFromCart(String email, CartItemDTO cartItemDTO)
-
-    public Cart incrementProductQuantity(String username, Integer productId);
-
-    public Cart decrementProductQuantity(String username, Integer productId);
-
-    public void checkout(String username);
+//
+//    public Cart incrementProductQuantity(String username, Integer productId);
+//
+//    public Cart decrementProductQuantity(String username, Integer productId);
+//
+//    public void checkout(String username);
 
     public Map<String, Integer> getCartDetails(String username);
 }

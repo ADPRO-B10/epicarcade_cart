@@ -68,20 +68,10 @@ public class CartServiceImpl implements CartService{
         }
     }
 
-    @Override
-    public Cart incrementProductQuantity(String username, Integer productId) {
-        // Increment product quantity in the cart
-    }
-
-    @Override
-    public Cart decrementProductQuantity(String username, Integer productId) {
-        // Decrement product quantity in the cart
-    }
-
-    @Override
-    public void checkout(String username) {
-        // Perform checkout operation
-    }
+//    @Override
+//    public void checkout(String username) {
+//        // Perform checkout operation
+//    }
 
     @Override
     public Map<String, Integer> getCartDetails(String userEmail) {
