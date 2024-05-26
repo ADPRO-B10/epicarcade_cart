@@ -1,41 +1,41 @@
 package adpro.b10.epicarcade_functional.cart.service;
 
-import adpro.b10.epicarcade_functional.Review.Model.Game;
-import adpro.b10.epicarcade_functional.cart.dao.CartDao;
-import adpro.b10.epicarcade_functional.cart.dao.GameDao;
+import adpro.b10.epicarcade_functional.cart.dto.CartDTO;
+import adpro.b10.epicarcade_functional.cart.repository.CartDao;
+import adpro.b10.epicarcade_functional.cart.repository.CartRepository;
 import adpro.b10.epicarcade_functional.cart.model.Cart;
 import adpro.b10.epicarcade_functional.model.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CartServiceImpl implements CartService{
-    @Autowired
-    private CartDao cartDao;
 
     @Autowired
-    private GameDao gameDao;
-
-//    @Autowired
-//    private UserDao userDao;
+    private CartRepository shoppingCartRepository;
 
     public Cart addToCart(String email, String itemId, Integer quantity) {
-        Cart cart = CartDao.findByEmail(email);
+        Map<String, String> response = new HashMap<>();
+        Cart cart = CartRepository.findByUserEmail(email);
 
-        String username = JwtRequestFilter.CURRENT_USER;
-
-        UserEntity user = null;
-        if(username != null){
-            UserEntity user = userDao.findById(username).get();
-
-            Cart cart = new Cart(game, user);
-
-            return cartDao.save(cart);
+        if (cart == null) {
+            cart = new Cart();
+            shoppingCartRepository.save(cart);
         }
 
-        return null;
+        cart.getItems().merge(itemId, quantity, Integer::sum);
+
+        return new CartDTO(
+                cart.getEmail(),
+                cart.getItems(),
+                cart.getTotalPrice());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     public void removeFromCart(String username, CartItemDTO cartItemDTO) {
@@ -62,4 +62,5 @@ public class CartServiceImpl implements CartService{
         String username = JwtRequestFilter.CURRENT_USER;
         UserEntity user = userDao.findById(username).get();
         return cartDao.findByUser(user);
+    }
 }
