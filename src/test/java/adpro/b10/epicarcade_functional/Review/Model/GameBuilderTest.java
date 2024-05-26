@@ -32,6 +32,7 @@ public class GameBuilderTest {
         assertEquals(stock, game.getStock());
     }
 
+
     @Test
     public void testBuildGameWithGeneratedId() {
         String name = "Test Game";
