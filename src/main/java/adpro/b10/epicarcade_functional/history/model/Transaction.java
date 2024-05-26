@@ -9,7 +9,6 @@ import lombok.Builder;
 import java.util.List;
 import java.time.LocalDate;
 
-@Builder
 @Getter
 
 public class Transaction {
@@ -21,6 +20,7 @@ public class Transaction {
     private LocalDate waktuTransaksi;
     private Long totalHarga;
 
+    @Builder
     public Transaction(String id, String pembeli, String penjual, List<Game> listGame, LocalDate waktuTransaksi, Long totalHarga) {
         this.id = id;
         this.pembeli = pembeli;
