@@ -3,8 +3,15 @@ package adpro.b10.epicarcade_functional.jualbeli.model;
 import adpro.b10.epicarcade_functional.jualbeli.enums.PaymentMethod;
 import adpro.b10.epicarcade_functional.jualbeli.enums.PaymentStatus;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.UUID;
 
 @Entity
 @Table(name = "payments")
@@ -12,25 +19,28 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class Payment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "method")
     private PaymentMethod method;
 
     @OneToOne
-    @JoinColumn(name = "order_id", referencedColumnName = "id")
-    @NotNull
+    @JoinColumn(name = "order_id")
     private Order order;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private PaymentStatus status;
+    
+    @Column(precision = 15, scale = 2)
+    private BigDecimal amount;
 
-    public Payment(String method, Order order) {
+    public Payment(PaymentMethod method, Order order) {
         this.order = order;
         this.method = method;
         this.status = PaymentStatus.PENDING;
+        this.amount = order.getTotalPrice();
     }
 
     public void setStatus(PaymentStatus status) {
@@ -44,18 +54,22 @@ public class Payment {
         }
     }
 
-    public BigDecimal getAmount() {
-        BigDecimal amount = order.getOrderGames().stream()
-            .map(orderGame -> orderGame.getGame().getPrice().multiply(BigDecimal.valueOf(orderGame.getQuantity())))
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
-        return amount.setScale(2, RoundingMode.HALF_UP);
-    }
-
     public void setMethod(PaymentMethod method) {
         this.method = method;
     }
 
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
     public PaymentMethod getMethod() {
         return method;
+    }
+
+    @PrePersist
+    public void generateId() {
+        if (id == null) {
+            id = UUID.randomUUID().toString();
+        }
     }
 }

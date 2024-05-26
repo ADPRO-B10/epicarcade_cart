@@ -1,9 +1,11 @@
-package main.java.adpro.b10.epicarcade_functional.jualbeli.controller;
+package adpro.b10.epicarcade_functional.jualbeli.controller;
 
+import adpro.b10.epicarcade_functional.jualbeli.dto.PaymentDto;
+import adpro.b10.epicarcade_functional.jualbeli.enums.PaymentMethod;
 import adpro.b10.epicarcade_functional.jualbeli.enums.PaymentStatus;
 import adpro.b10.epicarcade_functional.jualbeli.model.Payment;
 import adpro.b10.epicarcade_functional.jualbeli.service.PaymentServiceImpl;
-import main.java.adpro.b10.epicarcade_functional.jualbeli.strategy.DefaultPaymentStrategy;
+import adpro.b10.epicarcade_functional.jualbeli.strategy.DefaultPaymentStrategy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,37 +21,49 @@ public class PaymentController {
     private PaymentServiceImpl paymentService;
 
     @PostMapping
-    public ResponseEntity<Payment> createPayment(@RequestBody Payment payment) {
-        return ResponseEntity.ok(paymentService.savePayment(payment).orElse(null));
+    public ResponseEntity<PaymentDto> createPayment(@RequestBody PaymentDto paymentDto) {
+        PaymentDto savedPaymentDto = paymentService.createPaymentWithOrder(paymentDto, null);
+        return ResponseEntity.ok(savedPaymentDto);
+    }
+
+    @PutMapping("/{id}/method")
+    public ResponseEntity<PaymentDto> setPaymentMethod(@PathVariable String id, @RequestBody PaymentMethod method) {
+        Optional<PaymentDto> paymentDto = paymentService.setPaymentMethod(paymentService.getPaymentById(id).get(), method);
+        return paymentDto.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Payment> getPaymentById(@PathVariable Long id) {
-        Optional<Payment> payment = paymentService.getPaymentById(id);
-        return payment.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<PaymentDto> getPaymentById(@PathVariable String id) {
+        Optional<PaymentDto> paymentDto = paymentService.getPaymentById(id);
+        return paymentDto.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePayment(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePayment(@PathVariable String id) {
         paymentService.deletePayment(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<Payment> updatePaymentStatus(@PathVariable Long id, @RequestBody PaymentStatus status) {
-        Optional<Payment> payment = paymentService.updatePaymentStatus(id, status);
-        return payment.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<PaymentDto> updatePaymentStatus(@PathVariable String id, @RequestBody PaymentStatus status) {
+        Optional<PaymentDto> paymentDto = paymentService.updatePaymentStatus(id, status);
+        return paymentDto.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/order/{orderId}")
-    public ResponseEntity<Payment> getPaymentByOrderId(@PathVariable Long orderId) {
-        Optional<Payment> payment = paymentService.getPaymentByOrderId(orderId);
-        return payment.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<PaymentDto> getPaymentByOrderId(@PathVariable String orderId) {
+        Optional<PaymentDto> paymentDto = paymentService.getPaymentByOrderId(orderId);
+        return paymentDto.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/{id}/pay")
-    public ResponseEntity<Payment> pay(@PathVariable Long id) {
-        Optional<Payment> payment = paymentService.applyPaymentStrategy(id, new DefaultPaymentStrategy());
-        return payment.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    @PostMapping("/{id}/process")
+    public ResponseEntity<PaymentStatus> processPayment(@PathVariable String id) {
+        Optional<PaymentStatus> paymentStatus = paymentService.processPayment(paymentService.getPaymentById(id).get());
+        return paymentStatus.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

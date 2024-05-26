@@ -1,11 +1,18 @@
 package adpro.b10.epicarcade_functional.jualbeli.model;
 
-import adpro.b10.epicarcade_functional.Review.Model.Game;
 import adpro.b10.epicarcade_functional.jualbeli.enums.OrderStatus;
-import main.java.adpro.b10.epicarcade_functional.jualbeli.model.OrderGame;
+import adpro.b10.epicarcade_functional.jualbeli.model.OrderGame;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Entity
 @Table(name = "orders")
@@ -36,8 +43,14 @@ public class Order {
     @Column(name = "total_price")
     private BigDecimal totalPrice;
 
-    public void addOrderGame(OrderGame orderGame) {
-        this.orderGames.add(orderGame);
-        orderGame.setOrder(this);
+    public Order() {
+        this.id = UUID.randomUUID().toString();
+    }
+
+    @PreUpdate
+    public void updatePaymentAmount() {
+        if (payment != null) {
+            payment.setAmount(getTotalPrice());
+        }
     }
 }

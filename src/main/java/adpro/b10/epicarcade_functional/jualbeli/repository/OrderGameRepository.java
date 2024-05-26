@@ -1,9 +1,14 @@
-package main.java.adpro.b10.epicarcade_functional.jualbeli.repository;
+package adpro.b10.epicarcade_functional.jualbeli.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import adpro.b10.epicarcade_functional.jualbeli.model.OrderGame;
 
-public interface OrderGameRepository extends JpaRepository<OrderGame, Long> {
-    List<OrderGame> findByOrder_Id(Long orderId);
-    List<OrderGame> findByGame_Id(Long gameId);
+import java.util.List;
+import java.util.Optional;
+
+public interface OrderGameRepository extends JpaRepository<OrderGame, String> {
+    @Query("SELECT og FROM OrderGame og WHERE og.order.id = :orderId")
+    Optional<List<OrderGame>> findByOrderId(@Param("orderId") String orderId);
 }

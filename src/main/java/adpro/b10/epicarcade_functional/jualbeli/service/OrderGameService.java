@@ -1,14 +1,15 @@
-package main.java.adpro.b10.epicarcade_functional.jualbeli.service;
+package adpro.b10.epicarcade_functional.jualbeli.service;
 
-import main.java.adpro.b10.epicarcade_functional.jualbeli.model.OrderGame;
+import adpro.b10.epicarcade_functional.jualbeli.dto.OrderGameDto;
+import adpro.b10.epicarcade_functional.jualbeli.model.OrderGame;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Future;
 
 public interface OrderGameService {
-    OrderGame saveOrderGame(OrderGame orderGame);
-    Optional<OrderGame> getOrderGameById(Long id);
-    void deleteOrderGame(Long id);
-    List<OrderGame> getOrderGamesByOrderId(Long orderId);
-    List<OrderGame> getOrderGamesByGameId(Long gameId);
+    Future<OrderGameDto> saveOrderGame(OrderGameDto orderGameDto);
+    Future<Optional<OrderGameDto>> getOrderGameById(String id);
+    void deleteOrderGame(String id);
+    Future<List<OrderGameDto>> getOrderGamesByOrderId(String orderId);
 }

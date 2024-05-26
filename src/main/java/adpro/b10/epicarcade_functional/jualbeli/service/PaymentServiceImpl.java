@@ -1,60 +1,92 @@
 package adpro.b10.epicarcade_functional.jualbeli.service;
 
+import adpro.b10.epicarcade_functional.jualbeli.dto.PaymentDto;
 import adpro.b10.epicarcade_functional.jualbeli.enums.PaymentMethod;
 import adpro.b10.epicarcade_functional.jualbeli.enums.PaymentStatus;
+import adpro.b10.epicarcade_functional.jualbeli.mapper.PaymentMapper;
+import adpro.b10.epicarcade_functional.jualbeli.model.Order;
 import adpro.b10.epicarcade_functional.jualbeli.model.Payment;
 import adpro.b10.epicarcade_functional.jualbeli.repository.PaymentRepository;
+import adpro.b10.epicarcade_functional.jualbeli.strategy.DefaultPaymentStrategy;
 import adpro.b10.epicarcade_functional.jualbeli.strategy.PaymentStrategy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
+    private final PaymentRepository paymentRepository;
+    private final PaymentMapper paymentMapper;
+    private Map<PaymentMethod, PaymentStrategy> paymentStrategies;
+
     @Autowired
-    private PaymentRepository paymentRepository;
+    public PaymentServiceImpl(PaymentRepository paymentRepository, PaymentMapper paymentMapper) {
+        this.paymentRepository = paymentRepository;
+        this.paymentMapper = paymentMapper;
+        paymentStrategies = new HashMap<>();
+        paymentStrategies.put(PaymentMethod.DEFAULT, new DefaultPaymentStrategy());
+    }
 
     @Override
-    public Optional<Payment> savePayment(Payment payment, PaymentMethod method) {
+    public PaymentDto createPaymentWithOrder(PaymentDto paymentDto, Order order) {
+        Payment payment = paymentMapper.paymentDtoToPayment(paymentDto);
+        payment.setOrder(order);
+        Payment savedPayment = paymentRepository.save(payment);
+        return paymentMapper.paymentToPaymentDto(savedPayment);
+    }
+
+    @Override
+    public Optional<PaymentDto> setPaymentMethod(PaymentDto paymentDto, PaymentMethod method) {
+        Payment payment = paymentMapper.paymentDtoToPayment(paymentDto);
         payment.setMethod(method);
-        return Optional.of(paymentRepository.save(payment));
+        Payment savedPayment = paymentRepository.save(payment);
+        return Optional.of(paymentMapper.paymentToPaymentDto(savedPayment));
     }
 
     @Override
-    public Optional<Payment> getPaymentById(Long id) {
-        return paymentRepository.findById(id);
+    public Optional<PaymentDto> savePayment(PaymentDto paymentDto) {
+        Payment payment = paymentMapper.paymentDtoToPayment(paymentDto);
+        Payment savedPayment = paymentRepository.save(payment);
+        return Optional.of(paymentMapper.paymentToPaymentDto(savedPayment));
     }
 
     @Override
-    public void deletePayment(Long id) {
+    public Optional<PaymentDto> getPaymentById(String id) {
+        Optional<Payment> payment = paymentRepository.findById(id);
+        return Optional.of(payment.map(paymentMapper::paymentToPaymentDto).orElse(null));
+    }
+
+    @Override
+    public void deletePayment(String id) {
         paymentRepository.deleteById(id);
     }
 
     @Override
-    public Optional<Payment> updatePaymentStatus(Long id, PaymentStatus status) {
+    public Optional<PaymentDto> updatePaymentStatus(String id, PaymentStatus status) {
         Optional<Payment> payment = paymentRepository.findById(id);
         if (payment.isPresent()) {
             payment.get().setStatus(status);
             paymentRepository.save(payment.get());
         }
-        return payment;
+        return Optional.of(payment.map(paymentMapper::paymentToPaymentDto).orElse(null));
     }
 
     @Override
-    public Optional<Payment> getPaymentByOrderId(Long orderId) {
-        return paymentRepository.findByOrder_Id(orderId);
+    public Optional<PaymentDto> getPaymentByOrderId(String orderId) {
+        Optional<Payment> payment = paymentRepository.findByOrderId(orderId);
+        return Optional.of(payment.map(paymentMapper::paymentToPaymentDto).orElse(null));
     }
 
     @Override
-    public Optional<Payment> applyPaymentStrategy(Long paymentId, PaymentStrategy strategy) {
-        Optional<Payment> payment = paymentRepository.findById(paymentId);
-        if (payment.isPresent()) {
-            strategy.apply(payment.get());
-            paymentRepository.save(payment.get());
-        }
-        return payment;
+    public Optional<PaymentStatus> processPayment(PaymentDto paymentDto) {
+        Payment payment = paymentMapper.paymentDtoToPayment(paymentDto);
+        PaymentMethod method = payment.getMethod();
+        PaymentStrategy strategy = paymentStrategies.get(method);
+        return Optional.of(strategy.processPayment(payment).orElse(null));
     }
 }
