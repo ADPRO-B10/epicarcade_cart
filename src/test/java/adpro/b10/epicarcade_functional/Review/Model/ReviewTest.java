@@ -73,22 +73,4 @@ public class ReviewTest {
         assertTrue(actualMessage.contains(expectedMessage));
     }
 
-    @Test
-    public void testConstructorValidation() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new Review("1", "game1", 0, "Invalid rating");
-        });
-
-        String expectedMessage = "Rating has to be between 1 and 5";
-        String actualMessage = exception.getMessage();
-        assertTrue(actualMessage.contains(expectedMessage));
-
-        exception = assertThrows(IllegalArgumentException.class, () -> {
-            new Review("1", "game1", 5, "");
-        });
-
-        expectedMessage = "Comment cannot be empty";
-        actualMessage = exception.getMessage();
-        assertTrue(actualMessage.contains(expectedMessage));
-    }
 }

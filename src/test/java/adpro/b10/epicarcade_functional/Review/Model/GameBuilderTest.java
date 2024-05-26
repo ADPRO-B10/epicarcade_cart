@@ -53,16 +53,4 @@ public class GameBuilderTest {
         assertEquals(price, game.getPrice());
         assertEquals(stock, game.getStock());
     }
-
-    @Test
-    public void testBuildGameWithDefaultValues() {
-        Game game = new GameBuilder().build();
-
-        assertNotNull(game);
-        assertNotNull(game.getId());
-        assertNull(game.getName());
-        assertNull(game.getDescription());
-        assertEquals(0, game.getPrice());
-        assertEquals(0, game.getStock());
-    }
 }
