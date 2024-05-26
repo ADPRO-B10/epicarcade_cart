@@ -1,61 +1,65 @@
 package adpro.b10.epicarcade_functional.jualbeli.model;
 
-import adpro.b10.epicarcade_functional.Review.Model.Game;
 import adpro.b10.epicarcade_functional.jualbeli.enums.OrderStatus;
+import adpro.b10.epicarcade_functional.jualbeli.model.Order;
+import adpro.b10.epicarcade_functional.jualbeli.model.Payment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class OrderTest {
     private Order order;
-    private Map<Game, Integer> gamesQuantity;
+    private Payment payment;
 
     @BeforeEach
-    public void setUp() {
-        gamesQuantity = new HashMap<>();
-        gamesQuantity.put(new Game(), 1);
-        order = new Order("1", gamesQuantity, "buyer1");
+    public void setup() {
+        order = new Order();
+        payment = new Payment();
+        order.setPayment(payment);
     }
 
     @Test
-    public void testOrderCreation() {
-        assertEquals("1", order.getId());
-        assertEquals(gamesQuantity, order.getGamesQuantity());
-        assertEquals("buyer1", order.getBuyerId());
-        assertEquals(OrderStatus.WAITING_PAYMENT.getValue(), order.getStatus());
+    public void testGettersAndSetters() {
+        String id = UUID.randomUUID().toString();
+        order.setId(id);
+        assertEquals(id, order.getId());
+
+        String buyerId = "buyerId";
+        order.setBuyerId(buyerId);
+        assertEquals(buyerId, order.getBuyerId());
+
+        OrderStatus status = OrderStatus.WAITING_PAYMENT;
+        order.setStatus(status);
+        assertEquals(status, order.getStatus());
+
+        LocalDateTime orderDate = LocalDateTime.now();
+        order.setOrderDate(orderDate);
+        assertEquals(orderDate, order.getOrderDate());
+
+        BigDecimal totalPrice = new BigDecimal("100.00");
+        order.setTotalPrice(totalPrice);
+        assertEquals(totalPrice, order.getTotalPrice());
     }
 
     @Test
-    public void testOrderCreationWithEmptyGamesQuantity() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new Order("1", new HashMap<>(), "buyer1");
-        });
+    public void testUpdatePaymentAmount() {
+        BigDecimal totalPrice = new BigDecimal("100.00");
+        order.setTotalPrice(totalPrice);
 
-        String expectedMessage = "Games quantity cannot be empty";
-        String actualMessage = exception.getMessage();
+        order.updatePaymentAmount();
 
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertEquals(totalPrice, payment.getAmount());
     }
 
     @Test
-    public void testSetStatus() {
-        order.setStatus(OrderStatus.SUCCESS.getValue());
-        assertEquals(OrderStatus.SUCCESS.getValue(), order.getStatus());
-    }
-
-    @Test
-    public void testSetInvalidStatus() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            order.setStatus("INVALID_STATUS");
-        });
-
-        String expectedMessage = "Invalid order status";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+    public void testOrderConstructor() {
+        Order newOrder = new Order();
+        assertNotNull(newOrder.getId());
     }
 }

@@ -1,42 +1,53 @@
 package adpro.b10.epicarcade_functional.jualbeli.model;
 
+import adpro.b10.epicarcade_functional.jualbeli.enums.PaymentMethod;
 import adpro.b10.epicarcade_functional.jualbeli.enums.PaymentStatus;
+import adpro.b10.epicarcade_functional.jualbeli.model.Order;
+import adpro.b10.epicarcade_functional.jualbeli.model.Payment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class PaymentTest {
     private Payment payment;
+    private Order order;
 
     @BeforeEach
-    public void setUp() {
-        payment = new Payment("1", "OVO", "order1");
+    public void setup() {
+        order = new Order();
+        payment = new Payment(PaymentMethod.DEFAULT, order);
     }
 
     @Test
-    public void testPaymentCreation() {
-        assertEquals("1", payment.getId());
-        assertEquals("OVO", payment.getMethod());
-        assertEquals("order1", payment.getOrderId());
-        assertEquals(PaymentStatus.PENDING.getValue(), payment.getStatus());
+    public void testGettersAndSetters() {
+        PaymentMethod method = PaymentMethod.DEFAULT;
+        payment.setMethod(method);
+        assertEquals(method, payment.getMethod());
+
+        PaymentStatus status = PaymentStatus.SUCCESS;
+        payment.setStatus(status);
+        assertEquals(status, payment.getStatus());
+
+        BigDecimal amount = new BigDecimal("100.00");
+        payment.setAmount(amount);
+        assertEquals(amount, payment.getAmount());
     }
 
     @Test
-    public void testSetStatus() {
-        payment.setStatus(PaymentStatus.SUCCESS.getValue());
-        assertEquals(PaymentStatus.SUCCESS.getValue(), payment.getStatus());
+    public void testGenerateId() {
+        payment.generateId();
+        assertNotNull(payment.getId());
     }
 
     @Test
-    public void testSetInvalidStatus() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            payment.setStatus("INVALID_STATUS");
-        });
-
-        assertTrue(exception instanceof IllegalArgumentException);
+    public void testPaymentConstructor() {
+        Payment newPayment = new Payment(PaymentMethod.DEFAULT, order);
+        assertEquals(PaymentMethod.DEFAULT, newPayment.getMethod());
+        assertEquals(PaymentStatus.PENDING, newPayment.getStatus());
+        assertEquals(order.getTotalPrice(), newPayment.getAmount());
     }
 }

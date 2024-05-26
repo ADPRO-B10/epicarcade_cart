@@ -1,10 +1,14 @@
 package adpro.b10.epicarcade_functional.jualbeli.service;
 
+import adpro.b10.epicarcade_functional.jualbeli.dto.PaymentDto;
+import adpro.b10.epicarcade_functional.jualbeli.enums.PaymentMethod;
 import adpro.b10.epicarcade_functional.jualbeli.enums.PaymentStatus;
+import adpro.b10.epicarcade_functional.jualbeli.mapper.PaymentMapper;
 import adpro.b10.epicarcade_functional.jualbeli.model.Order;
 import adpro.b10.epicarcade_functional.jualbeli.model.Payment;
-import adpro.b10.epicarcade_functional.jualbeli.repository.OrderRepository;
 import adpro.b10.epicarcade_functional.jualbeli.repository.PaymentRepository;
+import adpro.b10.epicarcade_functional.jualbeli.service.PaymentServiceImpl;
+import adpro.b10.epicarcade_functional.jualbeli.strategy.DefaultPaymentStrategy;
 import adpro.b10.epicarcade_functional.jualbeli.strategy.PaymentStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,99 +16,126 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class PaymentServiceImplTest {
-    @Mock
-    private PaymentRepository paymentRepository;
-
-    @Mock
-    private OrderRepository orderRepository;
-
-    @Mock
-    private PaymentStrategy paymentStrategy;
 
     @InjectMocks
     private PaymentServiceImpl paymentService;
 
+    @Mock
+    private PaymentRepository paymentRepository;
+
+    @Mock
+    private PaymentMapper paymentMapper;
+
+    @Mock
+    private DefaultPaymentStrategy defaultPaymentStrategy;
+
     @BeforeEach
-    public void setUp() {
+    public void init() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testAddPayment() {
-        Order order = new Order("1", null, "buyer1");
-        when(orderRepository.findById("1")).thenReturn(order);
+    public void testCreatePaymentWithOrder() {
+        PaymentDto paymentDto = new PaymentDto();
+        Order order = new Order();
+        Payment payment = new Payment();
+        when(paymentMapper.paymentDtoToPayment(paymentDto)).thenReturn(payment);
+        when(paymentRepository.save(payment)).thenReturn(payment);
+        when(paymentMapper.paymentToPaymentDto(payment)).thenReturn(paymentDto);
 
-        Payment payment = paymentService.addPayment("OVO", "1");
+        PaymentDto result = paymentService.createPaymentWithOrder(paymentDto, order);
 
-        assertEquals("OVO", payment.getMethod());
-        assertEquals("1", payment.getOrderId());
-        assertEquals(PaymentStatus.PENDING.getValue(), payment.getStatus());
-        verify(paymentRepository, times(1)).save(any(Payment.class));
+        assertEquals(paymentDto, result);
+        verify(paymentRepository, times(1)).save(payment);
     }
 
     @Test
-    public void testSetStatus() {
-        Order order = new Order("1", null, "buyer1");
-        Payment payment = new Payment("1", "OVO", "1");
-        when(orderRepository.findById("1")).thenReturn(order);
-        when(paymentRepository.findById("1")).thenReturn(payment);
+    public void testSetPaymentMethod() {
+        PaymentDto paymentDto = new PaymentDto();
+        Payment payment = new Payment();
+        when(paymentMapper.paymentDtoToPayment(paymentDto)).thenReturn(payment);
+        when(paymentRepository.save(payment)).thenReturn(payment);
+        when(paymentMapper.paymentToPaymentDto(payment)).thenReturn(paymentDto);
 
-        Payment updatedPayment = paymentService.setStatus(payment, PaymentStatus.SUCCESS.getValue());
+        Optional<PaymentDto> result = paymentService.setPaymentMethod(paymentDto, PaymentMethod.DEFAULT);
 
-        assertEquals(PaymentStatus.SUCCESS.getValue(), updatedPayment.getStatus());
-        verify(paymentRepository, times(1)).save(any(Payment.class));
+        assertEquals(Optional.of(paymentDto), result);
+        verify(paymentRepository, times(1)).save(payment);
     }
 
     @Test
-    public void testSetStatusOrderNotFound() {
-        Payment payment = new Payment("1", "OVO", "1");
-        when(orderRepository.findById("1")).thenReturn(null);
+    public void testSavePayment() {
+        PaymentDto paymentDto = new PaymentDto();
+        Payment payment = new Payment();
+        when(paymentMapper.paymentDtoToPayment(paymentDto)).thenReturn(payment);
+        when(paymentRepository.save(payment)).thenReturn(payment);
+        when(paymentMapper.paymentToPaymentDto(payment)).thenReturn(paymentDto);
 
-        assertThrows(NoSuchElementException.class, () -> {
-            paymentService.setStatus(payment, PaymentStatus.SUCCESS.getValue());
-        });
+        Optional<PaymentDto> result = paymentService.savePayment(paymentDto);
+
+        assertEquals(Optional.of(paymentDto), result);
+        verify(paymentRepository, times(1)).save(payment);
     }
 
     @Test
-    public void testGetPayment() {
-        Payment payment = new Payment("1", "OVO", "1");
-        when(paymentRepository.findById("1")).thenReturn(payment);
+    public void testGetPaymentById() {
+        PaymentDto paymentDto = new PaymentDto();
+        Payment payment = new Payment();
+        when(paymentRepository.findById("1")).thenReturn(Optional.of(payment));
+        when(paymentMapper.paymentToPaymentDto(payment)).thenReturn(paymentDto);
 
-        Payment result = paymentService.getPayment("1");
+        Optional<PaymentDto> result = paymentService.getPaymentById("1");
 
-        assertEquals(payment, result);
+        assertEquals(Optional.of(paymentDto), result);
     }
 
     @Test
-    public void testGetAllPayments() {
-        List<Payment> payments = Arrays.asList(new Payment("1", "OVO", "1"));
-        when(paymentRepository.findAll()).thenReturn(payments);
-
-        List<Payment> result = paymentService.getAllPayments();
-
-        assertEquals(payments, result);
+    public void testDeletePayment() {
+        paymentService.deletePayment("1");
+        verify(paymentRepository, times(1)).deleteById("1");
     }
 
     @Test
-    public void testSetPaymentStrategy() {
-        paymentService.setPaymentStrategy(paymentStrategy);
+    public void testUpdatePaymentStatus() {
+        PaymentDto paymentDto = new PaymentDto();
+        Payment payment = new Payment();
+        when(paymentRepository.findById("1")).thenReturn(Optional.of(payment));
+        when(paymentMapper.paymentToPaymentDto(payment)).thenReturn(paymentDto);
 
-        verifyNoInteractions(paymentRepository);
+        Optional<PaymentDto> result = paymentService.updatePaymentStatus("1", PaymentStatus.SUCCESS);
+
+        assertEquals(Optional.of(paymentDto), result);
+        verify(paymentRepository, times(1)).save(payment);
     }
 
     @Test
-    public void testExecutePayment() {
-        paymentService.setPaymentStrategy(paymentStrategy);
-        paymentService.executePayment(100.0);
+    public void testGetPaymentByOrderId() {
+        PaymentDto paymentDto = new PaymentDto();
+        Payment payment = new Payment();
+        when(paymentRepository.findByOrderId("1")).thenReturn(Optional.of(payment));
+        when(paymentMapper.paymentToPaymentDto(payment)).thenReturn(paymentDto);
 
-        verify(paymentStrategy, times(1)).pay(100.0);
+        Optional<PaymentDto> result = paymentService.getPaymentByOrderId("1");
+
+        assertEquals(Optional.of(paymentDto), result);
+    }
+
+    @Test
+    public void testProcessPayment() {
+        PaymentDto paymentDto = new PaymentDto();
+        Payment payment = new Payment();
+        payment.setMethod(PaymentMethod.DEFAULT);
+        when(paymentMapper.paymentDtoToPayment(paymentDto)).thenReturn(payment);
+        when(defaultPaymentStrategy.processPayment(payment)).thenReturn(Optional.of(PaymentStatus.SUCCESS));
+
+        Optional<PaymentStatus> result = paymentService.processPayment(paymentDto);
+
+        assertEquals(Optional.of(PaymentStatus.SUCCESS), result);
     }
 }
