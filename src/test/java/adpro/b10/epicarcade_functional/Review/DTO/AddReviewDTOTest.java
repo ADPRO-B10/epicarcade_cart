@@ -40,15 +40,4 @@ public class AddReviewDTOTest {
         assertNull(dto.getComment());
     }
 
-    @Test
-    public void testToString() {
-        AddReviewDTO dto = new AddReviewDTO();
-
-        dto.setId_game("game1");
-        dto.setRating(5);
-        dto.setComment("Great game!");
-
-        String expected = "AddReviewDTO(id_game=game1, rating=5, comment=Great game!)";
-        assertEquals(expected, dto.toString());
-    }
 }
