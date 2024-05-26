@@ -1,10 +1,8 @@
 package adpro.b10.epicarcade_functional.cart.service;
 
 import adpro.b10.epicarcade_functional.cart.model.CartItem;
-import adpro.b10.epicarcade_functional.cart.repository.CartDao;
 import adpro.b10.epicarcade_functional.cart.repository.CartRepository;
 import adpro.b10.epicarcade_functional.cart.model.Cart;
-import adpro.b10.epicarcade_functional.model.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
