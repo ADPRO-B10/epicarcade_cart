@@ -94,6 +94,6 @@ public class CartServiceImpl implements CartService{
 
     @Override
     public Cart getCartByUserEmail(String userEmail) {
-        Cart cart = shoppingCartRepository.findByUserEmail(userEmail);
+        return shoppingCartRepository.findByUserEmail(userEmail);
     }
 }
