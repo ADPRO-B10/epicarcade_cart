@@ -41,7 +41,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
 	implementation("jakarta.persistence:jakarta.persistence-api:3.0.0")
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("jakarta.validation:jakarta.validation-api:3.0.0")
 
     //Authentication for User Models
