@@ -39,6 +39,15 @@ jobs:
         with:
           name: java-app
           path: build/libs/*.jar
+      - name: echo secret
+        env:
+          DEBUG_PASSWORD: ${{ secrets.JDBC_DATABASE_PASSWORD }}
+          DEBUG_SECRET_KEY: ${{ secrets.JDBC_DATABASE_USERNAME }}
+          JDBC_DATABASE_URL: ${{ secrets.JDBC_DATABASE_URL }}
+        run: |
+          echo $DEBUG_PASSWORD
+          echo $DEBUG_SECRET_KEY
+          echo $JDBC_DATABASE_URL
 
   test:
     name: Test
