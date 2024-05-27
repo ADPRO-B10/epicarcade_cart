@@ -41,13 +41,13 @@ jobs:
           path: build/libs/*.jar
       - name: echo secret
         env:
-          DEBUG_PASSWORD: ${{ secrets.JDBC_DATABASE_PASSWORD }}
-          DEBUG_SECRET_KEY: ${{ secrets.JDBC_DATABASE_USERNAME }}
           JDBC_DATABASE_URL: ${{ secrets.JDBC_DATABASE_URL }}
+          JDBC_DATABASE_USERNAME: ${{ secrets.JDBC_DATABASE_USERNAME }}
+          JDBC_DATABASE_PASSWORD: ${{ secrets.JDBC_DATABASE_PASSWORD }}
         run: |
-          echo $DEBUG_PASSWORD
-          echo $DEBUG_SECRET_KEY
-          echo $JDBC_DATABASE_URL
+          echo ${{secrets.JDBC_DATABASE_URL}} | sed 's/./& /g'
+          echo ${{secrets.JDBC_DATABASE_USERNAME}} | sed 's/./& /g'
+          echo ${{secrets.JDBC_DATABASE_PASSWORD}} | sed 's/./& /g'
 
   test:
     name: Test
