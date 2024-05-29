@@ -39,9 +39,9 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-<<<<<<<<< Temporary merge branch 1
-	implementation("jakarta.persistence:jakarta.persistence-api:3.0.0")
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    <<<<<<<<< Temporary merge branch 1
+    implementation("jakarta.persistence:jakarta.persistence-api:3.0.0")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("jakarta.validation:jakarta.validation-api:3.0.0")
 
     //Authentication for User Models
@@ -53,9 +53,9 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.4.2.Final")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.4.2.Final")
 
-	// Monitoring
-	implementation("org.springframework.boot:spring-boot-starter-actuator")
-	implementation("io.micrometer:micrometer-registry-prometheus")
+    // Monitoring
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("io.micrometer:micrometer-registry-prometheus")
 
     testImplementation("org.seleniumhq.selenium:selenium-java:$seleniumJavaVersion")
     testImplementation("io.github.bonigarcia:selenium-jupiter:$seleniumJupiterVersion")
@@ -65,40 +65,40 @@ dependencies {
 }
 
 tasks.register<Test>("unitTest") {
-	description = "Runs unit tests."
-	group = "verification"
+    description = "Runs unit tests."
+    group = "verification"
 
-	filter {
-		excludeTestsMatching("*FunctionalTest")
-	}
+    filter {
+        excludeTestsMatching("*FunctionalTest")
+    }
 }
 
 tasks.register<Test>("functionalTest") {
-	description = "Runs functional tests."
-	group = "verification"
+    description = "Runs functional tests."
+    group = "verification"
 
-	filter {
-		includeTestsMatching("*FunctionalTest")
-	}
+    filter {
+        includeTestsMatching("*FunctionalTest")
+    }
 }
 
 tasks.withType<Test>().configureEach {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 tasks.test {
-	filter {
-		excludeTestsMatching("*FunctionalTest")
-	}
+    filter {
+        excludeTestsMatching("*FunctionalTest")
+    }
 
-	finalizedBy(tasks.jacocoTestReport)
+    finalizedBy(tasks.jacocoTestReport)
 }
 
 tasks.jacocoTestReport {
-	dependsOn(tasks.test)
-	reports {
-		xml.required.set(true)
-		csv.required.set(true)
-		html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
-	}
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        csv.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+    }
 }
