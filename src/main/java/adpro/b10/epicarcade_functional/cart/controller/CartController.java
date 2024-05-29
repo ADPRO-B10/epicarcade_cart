@@ -5,6 +5,7 @@ import adpro.b10.epicarcade_functional.cart.dto.CartItemDTO;
 import adpro.b10.epicarcade_functional.cart.model.Cart;
 import adpro.b10.epicarcade_functional.cart.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -20,10 +21,14 @@ class CartController {
     @Autowired
     private CartService cartService;
 
-    @PostMapping("add")
-    public ResponseEntity<String> addItemToCart(@RequestParam String userEmail, @RequestBody CartItemDTO cartItemDTO) {
-        cartService.addToCart(userEmail, cartItemDTO.getGameId(), cartItemDTO.getQuantity());
-        return ResponseEntity.ok("Item added to cart");
+    @PostMapping("add/{userEmail}")
+    public ResponseEntity<String> addItemToCart(@PathVariable String userEmail, @RequestBody CartItemDTO cartItemDTO) {
+        try {
+            cartService.addToCart(userEmail, cartItemDTO.getGameId(), cartItemDTO.getQuantity());
+            return ResponseEntity.ok("Item added to cart");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
 //    @PostMapping("increment")
@@ -38,8 +43,8 @@ class CartController {
 //        return ResponseEntity.ok(response);
 //    }
 
-    @DeleteMapping("remove")
-    public ResponseEntity<String> removeItem(@RequestParam String userEmail, @RequestParam String itemId) {
+    @DeleteMapping("remove/{userEmail}/{itemId}")
+    public ResponseEntity<String> removeItem(@PathVariable String userEmail, @PathVariable String itemId) {
         cartService.removeFromCart(userEmail, itemId);
         return ResponseEntity.ok("Item removed from cart");
     }

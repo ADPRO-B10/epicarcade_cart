@@ -2,12 +2,9 @@ package adpro.b10.epicarcade_functional.Review.Model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-
-import java.util.UUID;
-
+@Getter
 @Entity
 @Table(name = "game")
-@Getter
 public class Game {
 
     @Id
@@ -36,24 +33,6 @@ public class Game {
         this.price = price;
         this.stock = stock;
     }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public int getStock(){return stock;}
 
     public String setId(String id){
         return

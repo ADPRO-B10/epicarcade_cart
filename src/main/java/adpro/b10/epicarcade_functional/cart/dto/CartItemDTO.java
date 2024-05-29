@@ -1,12 +1,13 @@
 package adpro.b10.epicarcade_functional.cart.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Data
 public class CartItemDTO {
-//    private Integer id;
     private String gameId;
-    private Integer cartId;
     private int quantity;
-    private double price;
 }
