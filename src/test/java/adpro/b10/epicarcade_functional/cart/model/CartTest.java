@@ -1,5 +1,6 @@
 package adpro.b10.epicarcade_functional.cart.model;
 
+import adpro.b10.epicarcade_functional.cart.enums.CartStatus;
 import adpro.b10.epicarcade_functional.cart.model.Cart;
 import adpro.b10.epicarcade_functional.cart.model.CartItem;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-@DataJpaTest
 public class CartTest {
 
     @Test
@@ -19,7 +19,7 @@ public class CartTest {
         Cart cart = new Cart();
 
         String userEmail = "test@example.com";
-        String currentStatus = "Active";
+        String currentStatus = CartStatus.EMPTY.getValue();
         List<CartItem> items = new ArrayList<>();
 
         cart.setUserEmail(userEmail);
