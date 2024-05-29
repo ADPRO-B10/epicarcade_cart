@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface BuyerRepository extends JpaRepository<BuyerEntity, Integer> {
     Optional<BuyerEntity> findByUsername(String username);
     Optional<BuyerEntity> findByEmail(String email);
-    Optional<BuyerEntity> findByBuyerId(Integer userId);
+    Optional<BuyerEntity> findById(Integer userId);
 }

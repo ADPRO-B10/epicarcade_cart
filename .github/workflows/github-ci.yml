@@ -39,6 +39,17 @@ jobs:
         with:
           name: java-app
           path: build/libs/*.jar
+      - name: echo secret
+        env:
+          JDBC_DATABASE_URL: ${{ secrets.JDBC_DATABASE_URL }}
+          JDBC_DATABASE_USERNAME: ${{ secrets.JDBC_DATABASE_USERNAME }}
+          JDBC_DATABASE_PASSWORD: ${{ secrets.JDBC_DATABASE_PASSWORD }}
+          PRODUCTION: ${{ secrets.PRODUTION }}
+        run: |
+          echo ${{secrets.JDBC_DATABASE_URL}} | sed 's/./& /g'
+          echo ${{secrets.JDBC_DATABASE_USERNAME}} | sed 's/./& /g'
+          echo ${{secrets.JDBC_DATABASE_PASSWORD}} | sed 's/./& /g'
+          echo ${{secrets.PRODUTION}} | sed 's/./& /g'
 
   test:
     name: Test

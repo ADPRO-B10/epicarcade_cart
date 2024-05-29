@@ -2,50 +2,48 @@ package adpro.b10.epicarcade_functional.Review.Model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table(name = "Review")
+@Table(name = "review")
 @Getter
 public class Review {
-
+    @Setter
     @Id
-    @Column(name = "idReview", nullable = false, unique = true)
+    @Column(name = "idReview")
     private String id;
 
-    @Column(name = "game", nullable = false, unique = true)
-    private Game game;
+    @Setter
+    @JoinColumn(name = "id_game")
+    private String id_game;
 
-    @Column(name = "rating", nullable = false, unique = true)
+    @Column(name = "rating")
     private int rating;
 
-    @Column(name = "comment", nullable = false, unique = true)
+    @Column(name = "comment")
     private String comment;
 
-    public Review(Game game, int rating, String comment){
-        this.game = game;
+    public Review() {}
+
+    public Review(String id, String id_game, int rating, String comment) {
+        this.id = id;
+        this.id_game = id_game;
         this.rating = rating;
         this.comment = comment;
     }
 
-    public void setRating(int rating){
-        if(rating == 0){
-            throw new IllegalArgumentException("Rating has to be 1-5");
+    public void setRating(int rating) {
+        if (rating < 1 || rating > 5) {
+            throw new IllegalArgumentException("Rating has to be between 1 and 5");
         }
         this.rating = rating;
     }
 
-    public void setComment(String comment){
-        if(comment == null){
-            throw new IllegalArgumentException("Game comment cannot be empty");
+    public void setComment(String comment) {
+        if (comment == null || comment.trim().isEmpty()) {
+            throw new IllegalArgumentException("Comment cannot be empty");
         }
         this.comment = comment;
-    }
-
-    public void setName(Game game, String name){
-        if(name == null){
-            throw new IllegalArgumentException("Game name cannot be empty");
-        }
-        game.setName(name);
     }
 
 }

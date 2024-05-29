@@ -6,12 +6,12 @@ import lombok.Getter;
 import java.util.UUID;
 
 @Entity
-@Table(name = "Game")
+@Table(name = "game")
 @Getter
 public class Game {
 
     @Id
-    @Column(name = "idGame", nullable = false, unique = true)
+    @Column(name = "id_game", nullable = false, unique = true)
     private String id;
 
     @Column(name = "name", nullable = false, unique = true)
@@ -26,14 +26,15 @@ public class Game {
     @Column(name = "stock", nullable = false)
     private int stock;
 
-//    @Column(name = "penjual", nullable = false)
-//    private User penjual; ini belum diimplement
-
-
-
-
-
     public Game(){
+    }
+
+    public Game(String id, String name, String description, int price, int stock) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
     }
 
     public String getId() {

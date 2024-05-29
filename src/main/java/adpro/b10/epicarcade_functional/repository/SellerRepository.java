@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface SellerRepository extends JpaRepository<SellerEntity, Integer> {
     Optional<SellerEntity> findByUsername(String username);
     Optional<SellerEntity> findByEmail(String email);
-    Optional<SellerEntity> findBySellerId(Integer userId);
+    Optional<SellerEntity> findById(Integer userId);
 }
