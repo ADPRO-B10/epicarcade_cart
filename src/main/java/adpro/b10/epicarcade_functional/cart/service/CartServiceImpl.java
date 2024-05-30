@@ -13,7 +13,6 @@ import java.util.Map;
 @Service
 public class CartServiceImpl implements CartService{
 
-    @Autowired
     private CartRepository shoppingCartRepository;
 
     @Override
@@ -94,6 +93,6 @@ public class CartServiceImpl implements CartService{
 
     @Override
     public Cart getCartByUserEmail(String userEmail) {
-        Cart cart = shoppingCartRepository.findByUserEmail(userEmail);
+        return shoppingCartRepository.findByUserEmail(userEmail);
     }
 }

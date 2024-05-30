@@ -26,12 +26,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
 public class OrderServiceImplTest {
 
     @InjectMocks
@@ -58,7 +59,7 @@ public class OrderServiceImplTest {
     }
 
     @Test
-    public void testCreateOrderFromCart() {
+    public void testCreateOrderFromCart() throws ExecutionException, InterruptedException {
         // Arrange
         String cartId = "cartId";
         OrderDto orderDto = new OrderDto();
@@ -91,10 +92,15 @@ public class OrderServiceImplTest {
         when(restTemplate.getForEntity(anyString(), eq(Map.class))).thenReturn(mockResponse);
         when(paymentService.createPaymentWithOrder(any(PaymentDto.class), any(Order.class))).thenReturn(mockPaymentDto);
         when(orderMapper.orderToOrderDto(any(Order.class))).thenReturn(orderDto);
-        when(orderService.createOrderFromCart(eq("cartId"))).thenReturn(Optional.of(mockOrderDto));
+        CompletableFuture<Optional<OrderDto>> completedFuture = CompletableFuture.completedFuture(Optional.of(mockOrderDto));
+        // when(orderService.createOrderFromCart()).thenReturn(completedFuture);
+        Order order = new Order();
+        when(orderRepository.save(any(Order.class))).thenReturn(order);
+        when(orderMapper.orderToOrderDto(order)).thenReturn(mockOrderDto);
 
         // Act
-        Optional<OrderDto> result = orderService.createOrderFromCart(cartId);
+        CompletableFuture<Optional<OrderDto>> futureResult = orderService.createOrderFromCart();
+        Optional<OrderDto> result = futureResult.get();
 
         // Assert
         assertTrue(result.isPresent());
