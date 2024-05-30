@@ -1,11 +1,16 @@
 package adpro.b10.epicarcade_functional.cart.service;
 
+import adpro.b10.epicarcade_functional.Review.Repository.GameRepository;
+import adpro.b10.epicarcade_functional.cart.enums.CartStatus;
 import adpro.b10.epicarcade_functional.cart.model.CartItem;
 import adpro.b10.epicarcade_functional.cart.repository.CartRepository;
 import adpro.b10.epicarcade_functional.cart.model.Cart;
+import adpro.b10.epicarcade_functional.Review.Model.Game;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,15 +18,35 @@ import java.util.Map;
 @Service
 public class CartServiceImpl implements CartService{
 
-    private CartRepository shoppingCartRepository;
+    @Autowired
+    private final CartRepository shoppingCartRepository;
+    @Autowired
+    private final GameRepository gameRepository;
+
+    public CartServiceImpl(CartRepository shoppingCartRepository, GameRepository gameRepository) {
+        this.shoppingCartRepository = shoppingCartRepository;
+        this.gameRepository = gameRepository;
+    }
 
     @Override
     public Cart addToCart(String email, String itemId, Integer quantity) {
+        Game game = gameRepository.findById(itemId).orElse(null);
+
+        if (game == null || game.getStock() <= 0) {
+            throw new IllegalArgumentException("The game is out of stock or does not exist.");
+        }
+
         Cart cart = shoppingCartRepository.findByUserEmail(email);
 
         if (cart == null) {
             cart = new Cart();
             cart.setUserEmail(email);
+        }
+
+        // Initialize items list if null
+        if (cart.getItems() == null) {
+            cart.setItems(new ArrayList<>());
+            cart.setCurrentStatus(CartStatus.EMPTY.getValue());
         }
 
         List<CartItem> items = cart.getItems();
@@ -40,12 +65,15 @@ public class CartServiceImpl implements CartService{
         if (!itemFound) {
             CartItem newItem = new CartItem();
             newItem.setProductId(itemId);
+            newItem.setProductPrice(game.getPrice());
             newItem.setQuantity(quantity);
+            newItem.setUserEmail(email);
             newItem.setCart(cart);
             items.add(newItem);
         }
 
         cart.setItems(items);
+        cart.setCurrentStatus(CartStatus.FILLED.getValue());
         return shoppingCartRepository.save(cart);
     }
 
@@ -74,7 +102,14 @@ public class CartServiceImpl implements CartService{
         if (cart != null) {
             List<CartItem> cartItems = cart.getItems();
             for (CartItem item : cartItems) {
-                cartDetails.put(item.getProductId(), item.getQuantity());
+                String productId = item.getProductId();
+                Integer quantity = item.getQuantity();
+
+                // Check if the game is available (stock > 0) before adding it to cart details
+                Game game = gameRepository.findById(productId).orElse(null);
+                if (game != null && game.getStock() > 0) {
+                    cartDetails.put(productId, quantity);
+                }
             }
         }
 
