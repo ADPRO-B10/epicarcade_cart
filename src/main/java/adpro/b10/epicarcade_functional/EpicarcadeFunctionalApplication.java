@@ -12,6 +12,5 @@ public class EpicarcadeFunctionalApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(EpicarcadeFunctionalApplication.class, args);
 	}
-
 }
 

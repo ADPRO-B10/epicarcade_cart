@@ -28,7 +28,6 @@ val webdrivermanagerVersion = "5.6.3"
 val junitJupiterVersion = "5.9.1"
 
 dependencies {
-<<<<<<< HEAD
     // Lombok
     compileOnly("org.projectlombok:lombok:$lombokVersion")
     annotationProcessor("org.projectlombok:lombok:$lombokVersion")
@@ -67,7 +66,6 @@ dependencies {
     testImplementation("io.github.bonigarcia:webdrivermanager:$webdrivermanagerVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
-=======
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -101,7 +99,6 @@ dependencies {
 	testImplementation("io.github.bonigarcia:webdrivermanager:$webdrivermanagerVersion")
 	testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
->>>>>>> fac8cf8302b4064e9e0feef7e469281e4d039459
 }
 
 tasks.register<Test>("unitTest") {
@@ -135,7 +132,6 @@ tasks.test {
 }
 
 tasks.jacocoTestReport {
-<<<<<<< HEAD
     dependsOn(tasks.test)
     reports {
         xml.required.set(true)
@@ -143,12 +139,10 @@ tasks.jacocoTestReport {
         html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
     }
 }
-=======
 	dependsOn(tasks.test)
 	reports {
 		xml.required.set(true)
 		csv.required.set(true)
 		html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
 	}
-}
->>>>>>> fac8cf8302b4064e9e0feef7e469281e4d039459
+

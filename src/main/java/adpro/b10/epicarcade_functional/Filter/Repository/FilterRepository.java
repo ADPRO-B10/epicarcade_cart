@@ -1,4 +1,4 @@
-package adpro.b10.epicarcade_functional.Review.Repository;
+package adpro.b10.epicarcade_functional.Filter.Repository;
 
 import adpro.b10.epicarcade_functional.Review.Model.Game;
 import org.springframework.data.jpa.repository.JpaRepository;
